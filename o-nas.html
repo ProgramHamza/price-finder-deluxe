@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O nás | Pear - Inteligentné Plánovanie Jedál</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fafafa;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        /* Page Transition Styles */
+        .page-transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(26, 93, 26, 0.9), rgba(34, 197, 94, 0.9));
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .page-transition-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .transition-content {
+            text-align: center;
+            color: white;
+        }
+
+        .transition-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto 16px;
+        }
+
+        .transition-text {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .site-header {
+            background: white;
+            padding: 20px 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a5d1a;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: #6b7280;
+            font-weight: 400;
+            font-size: 16px;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .nav-item.active {
+            color: #1a5d1a;
+            font-weight: 500;
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #1a5d1a;
+        }
+
+        .nav-item:hover:not(.active) {
+            color: #374151;
+        }
+
+        .get-started-btn {
+            background: #1a5d1a;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+
+        .get-started-btn:hover {
+            background: #0f4c0f;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 80px 0;
+            min-height: 70vh;
+        }
+
+        .about-hero {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .about-hero h1 {
+            font-size: 56px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+        }
+
+        .about-hero .subtitle {
+            font-size: 20px;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(26, 93, 26, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 32px;
+        }
+
+        .feature-card h3 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Team Section */
+        .team-section {
+            background: white;
+            padding: 80px 0;
+            border-radius: 24px;
+            text-align: center;
+        }
+
+        .team-section h2 {
+            font-size: 40px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 24px;
+        }
+
+        .team-description {
+            font-size: 18px;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto 40px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .main-nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 16px;
+            }
+
+            .about-hero h1 {
+                font-size: 40px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .feature-card {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">Pear</a>
+                <nav class="main-nav">
+                    <a href="index.html" class="nav-item">Domov</a>
+                    <a href="recepty.html" class="nav-item">Recepty</a>
+                    <a href="nakupny-zoznam.html" class="nav-item">Nákupný zoznam</a>
+                    <a href="o-nas.html" class="nav-item active">O nás</a>
+                    <a href="#contact" class="get-started-btn">Začať</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="main-content">
+            <div class="container">
+                <div class="about-hero">
+                    <h1>O projekte Pear</h1>
+                    <p class="subtitle">
+                        Sme tím nadšencov, ktorí vytvárajú inteligentné riešenia pre modernú kuchyňu. 
+                        Naša misia je pomôcť ľuďom žiť zdravšie, šetriť čas a znižovať plytvanie jedlom.
+                    </p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3>Naša misia</h3>
+                        <p>Revolucionalizovať spôsob, akým ľudia plánujú jedlá a nakupujú potraviny. Chceme, aby bolo plánovanie jedál jednoduché, efektívne a udržateľné.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">💡</div>
+                        <h3>Inovácia</h3>
+                        <p>Kombinujeme najnovšie technológie s používateľsky prívetivým dizajnom. Naše riešenia sú navrhnuté tak, aby vyhovovali moderným potrebám rodín.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">🌱</div>
+                        <h3>Udržateľnosť</h3>
+                        <p>Veríme v zodpovedné spotrebovanie. Pomáhame znižovať plytvanie jedlom a podporujeme ekonomické nakupovanie s ohľadom na životné prostredie.</p>
+                    </div>
+                </div>
+
+                <div class="team-section">
+                    <h2>Náš tím</h2>
+                    <p class="team-description">
+                        Sme skupina vývojárov, dizajnérov a odborníkov na výživu, ktorí sa spojili s cieľom 
+                        vytvoriť najlepšiu aplikáciu pre plánovanie jedál na Slovensku. Každý člen nášho tímu 
+                        prináša jedinečné skúsenosti a vášeň pre kvalitné riešenia.
+                    </p>
+                    <p class="team-description">
+                        <strong>Kontaktujte nás:</strong> info@pear.sk<br>
+                        <strong>Telefón:</strong> +421 123 456 789
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Page Transitions
+        function initPageTransitions() {
+            // Create transition overlay if it doesn't exist
+            if (!document.querySelector('.page-transition-overlay')) {
+                const overlay = document.createElement('div');
+                overlay.className = 'page-transition-overlay';
+                overlay.innerHTML = `
+                    <div class="transition-content">
+                        <div class="transition-spinner"></div>
+                        <div class="transition-text">Načítavam...</div>
+                    </div>
+                `;
+                document.body.appendChild(overlay);
+            }
+
+            // Add click handlers to navigation links
+            document.querySelectorAll('.nav-item, .logo, .get-started-btn').forEach(link => {
+                if (link.href && !link.classList.contains('active')) {
+                    link.addEventListener('click', function(e) {
+                        const href = this.getAttribute('href');
+                        
+                        if (href && href !== '#' && !href.startsWith('#') && href.endsWith('.html')) {
+                            e.preventDefault();
+                            startPageTransition(href);
+                        }
+                    });
+                }
+            });
+        }
+
+        function startPageTransition(url) {
+            const overlay = document.querySelector('.page-transition-overlay');
+            
+            // Show overlay
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Simulate loading time and navigate
+            setTimeout(() => {
+                window.location.href = url;
+            }, 500);
+        }
+
+        // Page load animation
+        function pageLoadAnimation() {
+            document.body.style.opacity = '0';
+            document.body.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                document.body.style.opacity = '1';
+                document.body.style.transform = 'translateY(0)';
+            }, 100);
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            pageLoadAnimation();
+            initPageTransitions();
+        });
+
+        // Handle browser back/forward buttons
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                document.body.style.opacity = '1';
+                document.body.style.transform = 'translateY(0)';
+                const overlay = document.querySelector('.page-transition-overlay');
+                if (overlay) {
+                    overlay.classList.remove('active');
+                }
+                document.body.style.overflow = 'auto';
+            }
+        });
+    </script>
+</body>
+</html>

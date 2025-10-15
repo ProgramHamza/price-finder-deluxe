@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recepty | Pear - Inteligentné Plánovanie Jedál</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fafafa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .site-header {
+            background: white;
+            padding: 20px 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a5d1a;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: #6b7280;
+            font-weight: 400;
+            font-size: 16px;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .nav-item.active {
+            color: #1a5d1a;
+            font-weight: 500;
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #1a5d1a;
+        }
+
+        .nav-item:hover:not(.active) {
+            color: #374151;
+        }
+
+        .get-started-btn {
+            background: #1a5d1a;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .get-started-btn:hover {
+            background: #0f4c0f;
+            transform: translateY(-1px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: #fafafa;
+            padding: 100px 0 80px 0;
+            min-height: 70vh;
+        }
+
+        .hero-badge {
+            background: rgba(26, 93, 26, 0.1);
+            color: #1a5d1a;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-block;
+            margin-bottom: 32px;
+        }
+
+        .hero h1 {
+            font-size: 72px;
+            font-weight: 700;
+            line-height: 0.9;
+            margin-bottom: 40px;
+            color: #1a1a1a;
+            letter-spacing: -2px;
+        }
+
+        .hero h1 .highlight {
+            color: #1a5d1a;
+        }
+
+        .hero .subtitle {
+            font-size: 18px;
+            color: #6b7280;
+            max-width: 550px;
+            margin-bottom: 48px;
+            line-height: 1.7;
+        }
+
+        /* Search and Filter Bar */
+        .search-section {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin: -40px auto 60px auto;
+            max-width: 900px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f3f4f6;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 16px 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            transition: all 0.2s;
+            min-width: 300px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #1a5d1a;
+            box-shadow: 0 0 0 3px rgba(26, 93, 26, 0.1);
+        }
+
+        .search-btn {
+            background: #1a5d1a;
+            color: white;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-btn:hover {
+            background: #0f4c0f;
+            transform: translateY(-1px);
+        }
+
+        .filters {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-chip {
+            background: #f3f4f6;
+            color: #6b7280;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-chip.active {
+            background: #1a5d1a;
+            color: white;
+        }
+
+        .filter-chip:hover:not(.active) {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        /* Recipe Grid */
+        .recipes-section {
+            padding: 40px 0 80px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: #6b7280;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            margin-top: 48px;
+        }
+
+        .recipe-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s;
+            border: 1px solid #f3f4f6;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .recipe-image {
+            width: 100%;
+            height: 240px;
+            background: linear-gradient(135deg, #f0fff0, #e6ffe6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .recipe-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .recipe-card:hover .recipe-image::before {
+            transform: translateX(100%);
+        }
+
+        .recipe-content {
+            padding: 24px;
+        }
+
+        .recipe-meta {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .recipe-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .recipe-description {
+            color: #6b7280;
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .recipe-tags {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .recipe-tag {
+            background: rgba(26, 93, 26, 0.1);
+            color: #1a5d1a;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .recipe-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-save {
+            background: rgba(26, 93, 26, 0.1);
+            color: #1a5d1a;
+            border: 1px solid rgba(26, 93, 26, 0.2);
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .btn-save:hover {
+            background: #1a5d1a;
+            color: white;
+        }
+
+        .btn-view {
+            background: #1a5d1a;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .btn-view:hover {
+            background: #0f4c0f;
+            transform: translateY(-1px);
+        }
+
+        /* Add Recipe FAB */
+        .fab {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 60px;
+            height: 60px;
+            background: #1a5d1a;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(26, 93, 26, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            background: #0f4c0f;
+            box-shadow: 0 12px 32px rgba(26, 93, 26, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .main-nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 16px;
+            }
+
+            .get-started-btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+
+            .hero {
+                padding: 60px 0 60px 0;
+                text-align: center;
+            }
+
+            .hero h1 {
+                font-size: 48px;
+                letter-spacing: -1px;
+            }
+
+            .hero .subtitle {
+                font-size: 16px;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .search-input {
+                min-width: auto;
+            }
+
+            .recipes-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .fab {
+                bottom: 16px;
+                right: 16px;
+                width: 56px;
+                height: 56px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">Pear</a>
+                <nav class="main-nav">
+                    <a href="index.html" class="nav-item">Domov</a>
+                    <a href="recepty.html" class="nav-item active">Recepty</a>
+                    <a href="nakupny-zoznam.html" class="nav-item">Nákupný zoznam</a>
+                    <a href="o-nas.html" class="nav-item">O nás</a>
+                    <a href="#contact" class="get-started-btn">Začať</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-badge">🍳 Recepty pre každého</div>
+                    <h1>
+                        Objavte <span class="highlight">tisíce</span><br>
+                        chutných receptov
+                    </h1>
+                    <p class="subtitle">
+                        Od jednoduchých jedál pre každý deň až po špeciálne príležitosti. 
+                        Ukladajte si obľúbené recepty a vytvárajte vlastné kulinárske kolekcie.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <div class="container">
+            <div class="search-section">
+                <div class="search-bar">
+                    <input type="text" class="search-input" placeholder="Hľadať recepty, ingrediencie...">
+                    <button class="search-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        Hľadať
+                    </button>
+                </div>
+                <div class="filters">
+                    <button class="filter-chip active">Všetky</button>
+                    <button class="filter-chip">Raňajky</button>
+                    <button class="filter-chip">Obedy</button>
+                    <button class="filter-chip">Večere</button>
+                    <button class="filter-chip">Dezerty</button>
+                    <button class="filter-chip">Vegetariánske</button>
+                    <button class="filter-chip">Rýchle</button>
+                    <button class="filter-chip">Zdravé</button>
+                </div>
+            </div>
+        </div>
+
+        <section class="recipes-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Populárne recepty</h2>
+                    <p class="section-subtitle">Najobľúbenejšie recepty našej komunity</p>
+                </div>
+
+                <div class="recipes-grid" id="recipes-grid">
+                    <!-- Recepty sa načítajú cez JavaScript -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <button class="fab" onclick="addRecipe()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+    </button>
+
+    <script>
+        // Vzorové dáta receptov
+        const recipes = [
+            {
+                id: 1,
+                title: "Kuracie Tikka Masala",
+                description: "Krémové kuracie kúsky v korenenej paradajkovej omáčke s basmati ryžou.",
+                time: "45 min",
+                difficulty: "Stredná",
+                servings: 4,
+                image: "🍛",
+                tags: ["Indické", "Pikantné", "Obľúbené"],
+                ingredients: ["kuracie prsia", "kokosové mlieko", "paradajky", "korenie garam masala"]
+            },
+            {
+                id: 2,
+                title: "Avokádové Toasty",
+                description: "Chutné a zdravé raňajky s avokádom, cherry paradajkami a fetou.",
+                time: "10 min",
+                difficulty: "Ľahká",
+                servings: 2,
+                image: "🥑",
+                tags: ["Raňajky", "Zdravé", "Rýchle"],
+                ingredients: ["avokádo", "celozrnný chlieb", "cherry paradajky", "feta"]
+            },
+            {
+                id: 3,
+                title: "Lososový Pokéball",
+                description: "Čerstvý losos s quinoou, avokádom a ázijskými zelenkami.",
+                time: "30 min",
+                difficulty: "Stredná",
+                servings: 2,
+                image: "🍣",
+                tags: ["Zdravé", "Ázijské", "Rýba"],
+                ingredients: ["čerstvý losos", "quinoa", "avokádo", "wakame"]
+            },
+            {
+                id: 4,
+                title: "Chocolate Lava Cake",
+                description: "Dekadentný čokoládový dezert s tekutým stredom a vanilkovou zmrzlinou.",
+                time: "25 min",
+                difficulty: "Ťažká",
+                servings: 4,
+                image: "🍫",
+                tags: ["Dezert", "Čokoláda", "Špeciálne"],
+                ingredients: ["tmavá čokoláda", "maslo", "vajíčka", "múka"]
+            },
+            {
+                id: 5,
+                title: "Vegánske Pad Thai",
+                description: "Klasické thajské jedlo s ryžovými rezancami a zeleninou bez mäsa.",
+                time: "35 min",
+                difficulty: "Stredná",
+                servings: 3,
+                image: "🍜",
+                tags: ["Vegánske", "Thajské", "Bezlepkové"],
+                ingredients: ["ryžové rezance", "tofu", "mungové klíčky", "arašidy"]
+            },
+            {
+                id: 6,
+                title: "Klasická Caesar Salad",
+                description: "Čerstvý rímsky šalát s parmezánom, krutónmi a Caesar dresingom.",
+                time: "15 min",
+                difficulty: "Ľahká",
+                servings: 2,
+                image: "🥗",
+                tags: ["Šaláty", "Rýchle", "Klasické"],
+                ingredients: ["rímsky šalát", "parmezán", "krutóny", "caesar dressing"]
+            }
+        ];
+
+        // Funkcia na vykreslenie receptov
+        function renderRecipes() {
+            const grid = document.getElementById('recipes-grid');
+            grid.innerHTML = '';
+
+            recipes.forEach(recipe => {
+                const recipeCard = document.createElement('div');
+                recipeCard.className = 'recipe-card';
+                
+                recipeCard.innerHTML = `
+                    <div class="recipe-image">${recipe.image}</div>
+                    <div class="recipe-content">
+                        <div class="recipe-meta">
+                            <div class="meta-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12,6 12,12 16,14"/>
+                                </svg>
+                                ${recipe.time}
+                            </div>
+                            <div class="meta-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                                ${recipe.servings} porcie
+                            </div>
+                        </div>
+                        <h3 class="recipe-title">${recipe.title}</h3>
+                        <p class="recipe-description">${recipe.description}</p>
+                        <div class="recipe-tags">
+                            ${recipe.tags.map(tag => `<span class="recipe-tag">${tag}</span>`).join('')}
+                        </div>
+                        <div class="recipe-actions">
+                            <button class="btn-save" onclick="saveRecipe(${recipe.id})">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                                </svg>
+                            </button>
+                            <button class="btn-view" onclick="viewRecipe(${recipe.id})">Zobraziť recept</button>
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(recipeCard);
+            });
+        }
+
+        // Funkcie pre interakcie
+        function saveRecipe(id) {
+            console.log('Ukladanie receptu:', id);
+            // Tu by sa implementovalo ukladanie do databázy
+        }
+
+        function viewRecipe(id) {
+            console.log('Zobrazenie receptu:', id);
+            // Tu by sa implementoval prechod na detail receptu
+        }
+
+        function addRecipe() {
+            console.log('Pridávanie nového receptu');
+            // Tu by sa otvoril formulár na pridanie receptu
+        }
+
+        // Filter functionality
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                // Tu by sa implementovalo filtrovanie receptov
+            });
+        });
+
+        // Inicializácia
+        document.addEventListener('DOMContentLoaded', function() {
+            renderRecipes();
+            pageLoadAnimation();
+            initPageTransitions();
+        });
+
+        // Page Transitions
+        function initPageTransitions() {
+            // Create transition overlay if it doesn't exist
+            if (!document.querySelector('.page-transition-overlay')) {
+                const overlay = document.createElement('div');
+                overlay.className = 'page-transition-overlay';
+                overlay.innerHTML = `
+                    <div class="transition-content">
+                        <div class="transition-spinner"></div>
+                        <div class="transition-text">Načítavam...</div>
+                    </div>
+                `;
+                document.body.appendChild(overlay);
+            }
+
+            // Add click handlers to navigation links
+            document.querySelectorAll('.nav-item, .logo, .btn-secondary').forEach(link => {
+                if (link.href && !link.classList.contains('active')) {
+                    link.addEventListener('click', function(e) {
+                        const href = this.getAttribute('href');
+                        
+                        if (href && href !== '#' && !href.startsWith('#') && href.endsWith('.html')) {
+                            e.preventDefault();
+                            startPageTransition(href);
+                        }
+                    });
+                }
+            });
+        }
+
+        function startPageTransition(url) {
+            const overlay = document.querySelector('.page-transition-overlay');
+            
+            // Show overlay
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Simulate loading time and navigate
+            setTimeout(() => {
+                window.location.href = url;
+            }, 500);
+        }
+
+        // Page load animation
+        function pageLoadAnimation() {
+            document.body.style.opacity = '0';
+            document.body.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                document.body.style.opacity = '1';
+                document.body.style.transform = 'translateY(0)';
+            }, 100);
+        }
+
+        // Handle browser back/forward buttons
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                document.body.style.opacity = '1';
+                document.body.style.transform = 'translateY(0)';
+                const overlay = document.querySelector('.page-transition-overlay');
+                if (overlay) {
+                    overlay.classList.remove('active');
+                }
+                document.body.style.overflow = 'auto';
+            }
+        });
+    </script>
+</body>
+</html>

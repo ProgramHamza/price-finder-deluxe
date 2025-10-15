@@ -1,0 +1,1848 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nákupný zoznam | Pear - Inteligentné Plánovanie Jedál</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fafafa;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        /* Page Transition Styles */
+        .page-loading {
+            opacity: 0;
+        }
+
+        .page-transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(26, 93, 26, 0.9), rgba(34, 197, 94, 0.9));
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .page-transition-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .transition-content {
+            text-align: center;
+            color: white;
+        }
+
+        .transition-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto 16px;
+        }
+
+        .transition-text {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .site-header {
+            background: white;
+            padding: 20px 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a5d1a;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: #6b7280;
+            font-weight: 400;
+            font-size: 16px;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .nav-item.active {
+            color: #1a5d1a;
+            font-weight: 500;
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #1a5d1a;
+        }
+
+        .nav-item:hover:not(.active) {
+            color: #374151;
+        }
+
+        .nav-item {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(26, 93, 26, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-item:hover::before {
+            left: 100%;
+        }
+
+        .get-started-btn {
+            background: #1a5d1a;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .get-started-btn:hover {
+            background: #0f4c0f;
+            transform: translateY(-1px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: #fafafa;
+            padding: 100px 0 80px 0;
+            min-height: 70vh;
+        }
+
+        .hero-badge {
+            background: rgba(26, 93, 26, 0.1);
+            color: #1a5d1a;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-block;
+            margin-bottom: 32px;
+        }
+
+        .hero h1 {
+            font-size: 72px;
+            font-weight: 700;
+            line-height: 0.9;
+            margin-bottom: 40px;
+            color: #1a1a1a;
+            letter-spacing: -2px;
+        }
+
+        .hero h1 .highlight {
+            color: #1a5d1a;
+        }
+
+        .hero .subtitle {
+            font-size: 18px;
+            color: #6b7280;
+            max-width: 550px;
+            margin-bottom: 48px;
+            line-height: 1.7;
+        }
+
+        /* Shopping List Container */
+        .shopping-container {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin: -40px auto 60px auto;
+            max-width: 900px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f3f4f6;
+        }
+
+        /* Add Item Section */
+        .add-item-section {
+            margin-bottom: 32px;
+        }
+
+        .add-item-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .add-item-header h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .item-input-container {
+            position: relative;
+            display: flex;
+            gap: 12px;
+        }
+
+        .item-input {
+            flex: 1;
+            padding: 16px 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        .item-input:focus {
+            outline: none;
+            border-color: #1a5d1a;
+            box-shadow: 0 0 0 3px rgba(26, 93, 26, 0.1);
+        }
+
+        .add-btn {
+            background: #1a5d1a;
+            color: white;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .add-btn:hover {
+            background: #0f4c0f;
+            transform: translateY(-1px);
+        }
+
+        /* Autocomplete Dropdown */
+        .autocomplete-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 80px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+        }
+
+        .autocomplete-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 1px solid #f3f4f6;
+            transition: background-color 0.2s;
+        }
+
+        .autocomplete-item:hover,
+        .autocomplete-item.selected {
+            background-color: #f9fafb;
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Shopping List */
+        .shopping-list {
+            margin-bottom: 32px;
+        }
+
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .list-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .list-stats {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .shopping-items {
+            list-style: none;
+        }
+
+        .shopping-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid #f3f4f6;
+            transition: all 0.2s;
+        }
+
+        .shopping-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .item-checkbox.checked {
+            background: #1a5d1a;
+            border-color: #1a5d1a;
+        }
+
+        .item-checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 500;
+            color: #1a1a1a;
+            margin-bottom: 2px;
+        }
+
+        .item-category {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .item-quantity {
+            font-size: 14px;
+            color: #6b7280;
+            margin-right: 16px;
+        }
+
+        .remove-item {
+            background: none;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .remove-item:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        /* Shopping Parameters */
+        .shopping-parameters {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #f3f4f6;
+        }
+
+        .parameters-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a5d1a;
+            margin-bottom: 24px;
+        }
+
+        .parameters-header svg {
+            color: #1a5d1a;
+        }
+
+        .parameter-section {
+            margin-bottom: 20px;
+        }
+
+        .parameter-section:last-of-type {
+            margin-bottom: 24px;
+        }
+
+        .parameter-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 12px;
+        }
+
+        .parameter-label svg {
+            color: #6b7280;
+        }
+
+        .distance-input {
+            width: 100%;
+            max-width: 120px;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #374151;
+            background: white;
+            transition: border-color 0.2s ease;
+        }
+
+        .distance-input:focus {
+            outline: none;
+            border-color: #1a5d1a;
+            box-shadow: 0 0 0 3px rgba(26, 93, 26, 0.1);
+        }
+
+        .preferred-stores {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 8px;
+        }
+
+        /* Simple store options for parameters */
+        .store-option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            border: 1px solid #e5e7eb;
+            background: white;
+        }
+
+        .store-option:hover {
+            background: rgba(26, 93, 26, 0.05);
+            border-color: #1a5d1a;
+        }
+
+        .store-option input {
+            display: none;
+        }
+
+        .store-option span:last-child {
+            font-size: 13px;
+            color: #6b7280;
+            font-weight: normal;
+        }
+
+        .store-option:hover span:last-child {
+            color: #1a5d1a;
+        }
+
+        /* Detailed store options for results */
+        .store-option-detailed {
+            display: flex;
+            align-items: flex-start;
+            cursor: pointer;
+            padding: 12px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            border: 1px solid #e5e7eb;
+            background: white;
+        }
+
+        .store-option-detailed:hover {
+            background: rgba(26, 93, 26, 0.05);
+            border-color: #1a5d1a;
+        }
+
+        .store-option-detailed input {
+            display: none;
+        }
+
+        .store-checkmark {
+            width: 16px;
+            height: 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 3px;
+            margin-right: 8px;
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        .store-option input:checked + .store-checkmark,
+        .store-option-detailed input:checked + .store-checkmark {
+            background: #1a5d1a;
+            border-color: #1a5d1a;
+        }
+
+        .store-option input:checked + .store-checkmark::after,
+        .store-option-detailed input:checked + .store-checkmark::after {
+            content: '✓';
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .store-info {
+            flex: 1;
+        }
+
+        .store-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 2px;
+        }
+
+        .store-address {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 2px;
+        }
+
+        .store-distance {
+            font-size: 12px;
+            color: #1a5d1a;
+            font-weight: 500;
+        }
+
+        .store-option-detailed:hover .store-name {
+            color: #1a5d1a;
+        }
+
+        .save-settings-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #1a5d1a;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(26, 93, 26, 0.2);
+        }
+
+        .save-settings-btn:hover {
+            background: #164e16;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(26, 93, 26, 0.3);
+        }
+
+        .save-settings-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(26, 93, 26, 0.2);
+        }
+
+        /* Compare Prices Button */
+        .compare-section {
+            border-top: 1px solid #f3f4f6;
+            padding-top: 24px;
+        }
+
+        .compare-btn {
+            background: linear-gradient(135deg, #1a5d1a, #22c55e);
+            color: white;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 auto;
+            box-shadow: 0 4px 12px rgba(26, 93, 26, 0.3);
+        }
+
+        .compare-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(26, 93, 26, 0.4);
+        }
+
+        .compare-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Price Comparison Results */
+        .price-results {
+            margin-top: 40px;
+            display: none;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .results-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .results-subtitle {
+            font-size: 16px;
+            color: #6b7280;
+        }
+
+        .store-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .store-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 2px solid #f3f4f6;
+            transition: all 0.3s;
+        }
+
+        .store-card.best-price {
+            border-color: #1a5d1a;
+            background: linear-gradient(135deg, #f0fff0, #ecfdf5);
+            position: relative;
+        }
+
+        .best-badge {
+            position: absolute;
+            top: -10px;
+            right: 16px;
+            background: #1a5d1a;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .store-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .store-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .store-distance {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .store-total {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a5d1a;
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .store-savings {
+            text-align: center;
+            font-size: 14px;
+            color: #22c55e;
+            font-weight: 500;
+        }
+
+        .select-store-btn {
+            width: 100%;
+            background: #1a5d1a;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 16px;
+        }
+
+        .select-store-btn:hover {
+            background: #0f4c0f;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            border: 3px solid #f3f4f6;
+            border-radius: 50%;
+            border-top-color: #1a5d1a;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .main-nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 16px;
+            }
+
+            .get-started-btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+
+            .hero {
+                padding: 60px 0 60px 0;
+                text-align: center;
+            }
+
+            .hero h1 {
+                font-size: 48px;
+                letter-spacing: -1px;
+            }
+
+            .hero .subtitle {
+                font-size: 16px;
+            }
+
+            .shopping-container {
+                margin: -20px auto 40px auto;
+                padding: 24px;
+            }
+
+            .item-input-container {
+                flex-direction: column;
+            }
+
+            .store-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">Pear</a>
+                <nav class="main-nav">
+                    <a href="index.html" class="nav-item">Domov</a>
+                    <a href="recepty.html" class="nav-item">Recepty</a>
+                    <a href="nakupny-zoznam.html" class="nav-item active">Nákupný zoznam</a>
+                    <a href="o-nas.html" class="nav-item">O nás</a>
+                    <a href="#contact" class="get-started-btn">Začať</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-badge">🛒 Inteligentné nakupovanie</div>
+                <h1>
+                    VÁŠ <span class="highlight">NÁKUPNÝ</span><br>
+                    ZOZNAM
+                </h1>
+                <p class="subtitle">
+                    Vytvorte si nákupný zoznam, porovnajte ceny v rôznych obchodoch a nájdite najlacnejšiu možnosť pre váš nákup.
+                </p>
+            </div>
+        </section>
+
+        <div class="container">
+            <div class="shopping-container">
+                <!-- Add Item Section -->
+                <div class="add-item-section">
+                    <div class="add-item-header">
+                        <h3>Pridať položku</h3>
+                    </div>
+                    <div class="item-input-container">
+                        <input 
+                            type="text" 
+                            class="item-input" 
+                            placeholder="Čo potrebujete kúpiť?"
+                            id="itemInput"
+                            autocomplete="off"
+                        >
+                        <div class="autocomplete-dropdown" id="autocompleteDropdown">
+                            <!-- Autocomplete items will be populated here -->
+                        </div>
+                        <button class="add-btn" onclick="addItem()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            Pridať
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Shopping List -->
+                <div class="shopping-list">
+                    <div class="list-header">
+                        <h3 class="list-title">Môj nákupný zoznam</h3>
+                        <span class="list-stats" id="listStats">0 položiek</span>
+                    </div>
+                    <ul class="shopping-items" id="shoppingItems">
+                        <!-- Shopping list items will be populated here -->
+                    </ul>
+                </div>
+
+                <!-- Shopping Parameters -->
+                <div class="shopping-parameters">
+                    <div class="parameters-header">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V6a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        <span>Parametre nákupu</span>
+                    </div>
+                    
+                    <!-- Distance Setting -->
+                    <div class="parameter-section">
+                        <div class="parameter-label">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="10" r="3"/>
+                                <path d="M12 2a8 8 0 0 0-8 8c0 6 8 12 8 12s8-6 8-12a8 8 0 0 0-8-8z"/>
+                            </svg>
+                            <span>Maximálna vzdialenosť (km)</span>
+                        </div>
+                        <input type="number" class="distance-input" value="10" min="1" max="50" step="1">
+                    </div>
+                    
+                    <!-- Preferred Stores -->
+                    <div class="parameter-section">
+                        <div class="parameter-label">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                <polyline points="9,22 9,12 15,12 15,22"/>
+                            </svg>
+                            <span>Preferované obchodné reťazce</span>
+                        </div>
+                        <div class="preferred-stores">
+                            <label class="store-option">
+                                <input type="checkbox" id="store-lidl" checked class="store-checkbox" data-store="lidl">
+                                <span class="store-checkmark"></span>
+                                <span>Lidl</span>
+                            </label>
+                            <label class="store-option">
+                                <input type="checkbox" id="store-billa" checked class="store-checkbox" data-store="billa">
+                                <span class="store-checkmark"></span>
+                                <span>Billa</span>
+                            </label>
+                            <label class="store-option">
+                                <input type="checkbox" id="store-tesco" checked class="store-checkbox" data-store="tesco">
+                                <span class="store-checkmark"></span>
+                                <span>Tesco</span>
+                            </label>
+                            <label class="store-option">
+                                <input type="checkbox" id="store-kaufland" checked class="store-checkbox" data-store="kaufland">
+                                <span class="store-checkmark"></span>
+                                <span>Kaufland</span>
+                            </label>
+                            <label class="store-option">
+                                <input type="checkbox" id="store-coop" checked class="store-checkbox" data-store="coop">
+                                <span class="store-checkmark"></span>
+                                <span>COOP Jednota</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Save Settings Button -->
+                    <button class="save-settings-btn" onclick="saveShoppingSettings()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                        </svg>
+                        Uložiť nastavenia
+                    </button>
+                </div>
+
+                <!-- Compare Prices Section -->
+                <div class="compare-section">
+                    <button class="compare-btn" id="comparePricesBtn" onclick="comparePrices()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V6a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        Porovnať ceny v vybraných obchodoch
+                    </button>
+                </div>
+
+                <!-- Price Comparison Results -->
+                <div class="price-results" id="priceResults">
+                    <div class="loading" id="loadingState">
+                        <div class="spinner"></div>
+                        <p>Porovnávame ceny v obchodoch...</p>
+                    </div>
+                    
+                    <div id="resultsContent" style="display: none;">
+                        <div class="results-header">
+                            <h2 class="results-title">Porovnanie cien</h2>
+                            <p class="results-subtitle">Nájdite najlacnejší obchod pre váš nákup</p>
+                        </div>
+                        
+                        <div class="store-grid" id="storeGrid">
+                            <!-- Store comparison cards will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Rozšírená databáza slovenských produktov
+        const productDatabase = [
+            // Jogurty
+            { name: "Zvolenský smotanový jogurt biely 145g", category: "Mliečne výrobky", basePrice: 0.99 },
+            { name: "Zvolenský smotanový jogurt jahoda 145g", category: "Mliečne výrobky", basePrice: 1.09 },
+            { name: "Zvolenský smotanový jogurt čokoláda 145g", category: "Mliečne výrobky", basePrice: 1.09 },
+            { name: "Zvolenský smotanový jogurt stracciatella 145g", category: "Mliečne výrobky", basePrice: 1.09 },
+            { name: "Zvolenský smotanový jogurt vlašský orech 145g", category: "Mliečne výrobky", basePrice: 1.09 },
+            { name: "Rajo Klasik jogurt biely 150g", category: "Mliečne výrobky", basePrice: 0.85 },
+            { name: "Rajo Klasik jogurt jahodový 150g", category: "Mliečne výrobky", basePrice: 0.95 },
+            { name: "Rajo Klasik jogurt čučoriedkový 150g", category: "Mliečne výrobky", basePrice: 0.95 },
+            { name: "Rajo Klasik jogurt marhuľový 150g", category: "Mliečne výrobky", basePrice: 0.95 },
+            { name: "Hollandia sedliacky jogurt biely 200g", category: "Mliečne výrobky", basePrice: 1.29 },
+            { name: "Hollandia sedliacky jogurt jahodový 200g", category: "Mliečne výrobky", basePrice: 1.39 },
+            { name: "Hollandia sedliacky jogurt biely 500g", category: "Mliečne výrobky", basePrice: 2.99 },
+            { name: "Tami biely jogurt 3,5% 150g", category: "Mliečne výrobky", basePrice: 0.89 },
+            { name: "Tami grécky jogurt biely 0% tuk 140g", category: "Mliečne výrobky", basePrice: 1.19 },
+            { name: "Tami grécky jogurt jahoda 140g", category: "Mliečne výrobky", basePrice: 1.29 },
+            { name: "Pilos (Lidl) grécky jogurt 10% tuk 400g", category: "Mliečne výrobky", basePrice: 2.49 },
+            { name: "Danone Activia biela 120g", category: "Mliečne výrobky", basePrice: 0.99 },
+            { name: "Danone Activia jahodová 120g", category: "Mliečne výrobky", basePrice: 1.09 },
+            { name: "Danone Activia cereálna 120g", category: "Mliečne výrobky", basePrice: 1.09 },
+            { name: "Danone Activia biela 4x120g", category: "Mliečne výrobky", basePrice: 3.99 },
+            { name: "Müller Mix jogurt čokoládové guličky 130g", category: "Mliečne výrobky", basePrice: 1.39 },
+            { name: "Müller Mix jogurt lentilky 130g", category: "Mliečne výrobky", basePrice: 1.39 },
+            { name: "Pribináček vanilkový 80g", category: "Mliečne výrobky", basePrice: 0.69 },
+            { name: "Pribináček kakaový 80g", category: "Mliečne výrobky", basePrice: 0.69 },
+            { name: "Pribináček Piškótik 100g", category: "Mliečne výrobky", basePrice: 0.79 },
+            { name: "Rajo Brejky vanilka s čokoládou 145g", category: "Mliečne výrobky", basePrice: 1.19 },
+            { name: "Rajo Korbáčiky údené 80g", category: "Mliečne výrobky", basePrice: 0.99 },
+            { name: "Rajo Korbáčiky neúdené 80g", category: "Mliečne výrobky", basePrice: 0.99 },
+            { name: "Zott Monte mliečny dezert 4x55g", category: "Mliečne výrobky", basePrice: 2.99 },
+            { name: "Ehrmann Grand Dessert vanilka 200g", category: "Mliečne výrobky", basePrice: 1.99 },
+            { name: "Ehrmann Grand Dessert dvojitá čokoláda 200g", category: "Mliečne výrobky", basePrice: 1.99 },
+            { name: "Pilos skyr natur 150g", category: "Mliečne výrobky", basePrice: 1.49 },
+            { name: "Pilos skyr ochutený 150g", category: "Mliečne výrobky", basePrice: 1.59 },
+            { name: "Agrola biely jogurt z farmy 200g", category: "Mliečne výrobky", basePrice: 1.39 },
+
+            // Mlieko
+            { name: "Rajo čerstvé mlieko plnotučné 3,5% 1l", category: "Mliečne výrobky", basePrice: 1.29 },
+            { name: "Rajo čerstvé mlieko polotučné 1,5% 1l", category: "Mliečne výrobky", basePrice: 1.19 },
+            { name: "Rajo trvanlivé mlieko plnotučné 3,5% 1l", category: "Mliečne výrobky", basePrice: 1.09 },
+            { name: "Rajo trvanlivé mlieko polotučné 1,5% 1l", category: "Mliečne výrobky", basePrice: 0.99 },
+            { name: "Rajo trvanlivé mlieko nízkotučné 0,5% 1l", category: "Mliečne výrobky", basePrice: 0.99 },
+            { name: "Tami čerstvé mlieko plnotučné 3,5% 1l", category: "Mliečne výrobky", basePrice: 1.25 },
+            { name: "Tami trvanlivé mlieko polotučné 1,5% 1l", category: "Mliečne výrobky", basePrice: 1.05 },
+            { name: "Babička čerstvé mlieko 3,5% 1l", category: "Mliečne výrobky", basePrice: 1.35 },
+            { name: "Pilos (Lidl) čerstvé mlieko polotučné 1,5% 1l", category: "Mliečne výrobky", basePrice: 0.89 },
+            { name: "Rajo bezlaktózové mlieko 1,5% 1l", category: "Mliečne výrobky", basePrice: 1.99 },
+            { name: "Alpro mandľový nápoj 1l", category: "Mliečne výrobky", basePrice: 2.49 },
+            { name: "Alpro sójový nápoj 1l", category: "Mliečne výrobky", basePrice: 2.29 },
+            { name: "Alpro ovsený nápoj Barista 1l", category: "Mliečne výrobky", basePrice: 2.69 },
+            { name: "Rajo acidofilné mlieko plnotučné 450g", category: "Mliečne výrobky", basePrice: 1.49 },
+            { name: "Rajo acidofilné mlieko nízkotučné 450g", category: "Mliečne výrobky", basePrice: 1.39 },
+            { name: "Rajo acidofilné mlieko jahodové 450g", category: "Mliečne výrobky", basePrice: 1.59 },
+            { name: "Tami kefírové mlieko nízkotučné 500g", category: "Mliečne výrobky", basePrice: 1.29 },
+            { name: "Pilos cmar 500g", category: "Mliečne výrobky", basePrice: 1.19 },
+            { name: "Sabi srvátkový nápoj 500ml", category: "Mliečne výrobky", basePrice: 0.99 },
+            { name: "Rajo Laktino čokoládové mlieko 250ml", category: "Mliečne výrobky", basePrice: 0.89 },
+
+            // Maslo, margaríny a tuky
+            { name: "Rajo maslo 82% 250g", category: "Mliečne výrobky", basePrice: 2.49 },
+            { name: "Rajo maslo 82% 125g", category: "Mliečne výrobky", basePrice: 1.39 },
+            { name: "Tami maslo 82% 250g", category: "Mliečne výrobky", basePrice: 2.39 },
+            { name: "Babička maslo 82% 250g", category: "Mliečne výrobky", basePrice: 2.69 },
+            { name: "Pilos maslo 82% 250g", category: "Mliečne výrobky", basePrice: 2.19 },
+            { name: "Liptov maslo 82% 250g", category: "Mliečne výrobky", basePrice: 2.89 },
+            { name: "Lurpak maslo solené 200g", category: "Mliečne výrobky", basePrice: 3.49 },
+            { name: "Veto rastlinná nátierka 400g", category: "Tuky", basePrice: 1.89 },
+            { name: "Rama Classic margarín 400g", category: "Tuky", basePrice: 2.19 },
+            { name: "Perla Tip margarín 500g", category: "Tuky", basePrice: 1.99 },
+            { name: "Hera na pečenie 250g", category: "Tuky", basePrice: 1.69 },
+            { name: "Palmarín na pečenie 250g", category: "Tuky", basePrice: 1.59 },
+            { name: "Cera stužený pokrmový tuk 250g", category: "Tuky", basePrice: 1.49 },
+            { name: "Bravčová masť 500g", category: "Tuky", basePrice: 2.99 },
+            { name: "Kačacia masť 200g", category: "Tuky", basePrice: 4.99 },
+
+            // Syry
+            { name: "Eidam tehla 45%", category: "Mliečne výrobky", basePrice: 12.99 },
+            { name: "Ementál plátky 45% 100g", category: "Mliečne výrobky", basePrice: 2.89 },
+            { name: "Leerdammer Original plátky 100g", category: "Mliečne výrobky", basePrice: 3.49 },
+            { name: "Liptov Bryndza plnotučná 125g", category: "Mliečne výrobky", basePrice: 1.99 },
+            { name: "Karička tavený syr v črievku 100g", category: "Mliečne výrobky", basePrice: 1.29 },
+            { name: "Karička tavený syr trojuholníky 8ks 125g", category: "Mliečne výrobky", basePrice: 1.89 },
+            { name: "Syrokrém tavený syr 100g", category: "Mliečne výrobky", basePrice: 1.19 },
+            { name: "Bambino tavený syr 100g", category: "Mliečne výrobky", basePrice: 1.39 },
+            { name: "Apetito tavený syr smotanový 150g", category: "Mliečne výrobky", basePrice: 1.99 },
+            { name: "Philadelphia Original nátierkový syr 125g", category: "Mliečne výrobky", basePrice: 3.29 },
+            { name: "Lučina nadýchaná 125g", category: "Mliečne výrobky", basePrice: 2.49 },
+            { name: "Tesco Cottage Cheese biely 180g", category: "Mliečne výrobky", basePrice: 1.79 },
+            { name: "Rajo Cottage Cheese biely 180g", category: "Mliečne výrobky", basePrice: 1.99 },
+            { name: "Pilos Cottage Cheese bylinky 180g", category: "Mliečne výrobky", basePrice: 1.69 },
+            { name: "Mozzarella Classic 125g", category: "Mliečne výrobky", basePrice: 1.99 },
+            { name: "Galbani Mozzarella 125g", category: "Mliečne výrobky", basePrice: 2.49 },
+            { name: "Mozzarella strúhaná 200g", category: "Mliečne výrobky", basePrice: 3.99 },
+            { name: "Parmezán strúhaný 40g", category: "Mliečne výrobky", basePrice: 2.99 },
+            { name: "Grana Padano strúhaný 100g", category: "Mliečne výrobky", basePrice: 4.99 },
+            { name: "Niva syr s modrou plesňou 120g", category: "Mliečne výrobky", basePrice: 2.79 },
+            { name: "Encián/Hermelín syr s bielou plesňou 120g", category: "Mliečne výrobky", basePrice: 1.89 },
+            { name: "Encián/Hermelín na gril 4ks", category: "Mliečne výrobky", basePrice: 3.49 },
+            { name: "Oštiepok údený 200g", category: "Mliečne výrobky", basePrice: 4.99 },
+            { name: "Parenica neúdená 110g", category: "Mliečne výrobky", basePrice: 2.49 },
+            { name: "Tekovský salámový syr údený plátky 100g", category: "Mliečne výrobky", basePrice: 2.99 },
+            { name: "Kleopatra údený syr tehla 200g", category: "Mliečne výrobky", basePrice: 3.99 },
+            { name: "Feta syr v slanom náleve 200g", category: "Mliečne výrobky", basePrice: 3.49 },
+            { name: "Halloumi syr na gril 225g", category: "Mliečne výrobky", basePrice: 4.99 },
+            { name: "Kozí syr čerstvý 100g", category: "Mliečne výrobky", basePrice: 4.49 },
+            { name: "Volovec údený syr tehla 250g", category: "Mliečne výrobky", basePrice: 4.99 },
+            { name: "Eidam údený plátky 100g", category: "Mliečne výrobky", basePrice: 2.59 },
+
+            // Tvaroh, smotana a šľahačka
+            { name: "Tami Tvaroh jemný hrudkovitý 250g", category: "Mliečne výrobky", basePrice: 1.89 },
+            { name: "Babička Tvaroh jemný 250g", category: "Mliečne výrobky", basePrice: 2.09 },
+            { name: "Pilos Tvaroh odtučnený 250g", category: "Mliečne výrobky", basePrice: 1.69 },
+            { name: "Rajo Tvaroh jemný 250g", category: "Mliečne výrobky", basePrice: 1.99 },
+            { name: "Milko Tvaroh ovocný 130g", category: "Mliečne výrobky", basePrice: 1.29 },
+            { name: "Rajo smotana na varenie 10% 250ml", category: "Mliečne výrobky", basePrice: 1.39 },
+            { name: "Tami smotana na varenie 10% 200g", category: "Mliečne výrobky", basePrice: 1.29 },
+            { name: "Pilos smotana na varenie 12% 200g", category: "Mliečne výrobky", basePrice: 1.19 },
+            { name: "Rajo kyslá smotana 16% 200g", category: "Mliečne výrobky", basePrice: 1.59 },
+            { name: "Tami kyslá smotana 14% 200g", category: "Mliečne výrobky", basePrice: 1.49 },
+            { name: "Babička kyslá smotana 16% 180g", category: "Mliečne výrobky", basePrice: 1.69 },
+            { name: "Rajo smotana na šľahanie 33% 250ml", category: "Mliečne výrobky", basePrice: 2.29 },
+            { name: "Tami smotana na šľahanie 33% 200ml", category: "Mliečne výrobky", basePrice: 2.09 },
+            { name: "Pilos smotana na šľahanie 40% 250ml", category: "Mliečne výrobky", basePrice: 2.49 },
+            { name: "Meggle Creme Patisserie rastlinná šľahačka 500ml", category: "Mliečne výrobky", basePrice: 3.49 },
+            { name: "Šľahačka v spreji 250g", category: "Mliečne výrobky", basePrice: 2.99 },
+
+            // Vajcia
+            { name: "Vajcia z podstielkového chovu M 10ks", category: "Vajíčka", basePrice: 2.49 },
+            { name: "Vajcia z voľného výbehu L 6ks", category: "Vajíčka", basePrice: 2.99 },
+            { name: "Babičkine vajcia z podstielky L 10ks", category: "Vajíčka", basePrice: 3.49 },
+            { name: "Prepeličie vajíčka 18ks", category: "Vajíčka", basePrice: 4.99 },
+            { name: "Bio vajcia 6ks", category: "Vajíčka", basePrice: 3.99 },
+
+            // Čerstvé mäso
+            { name: "Kuracie prsia chladené 500g", category: "Mäso", basePrice: 4.99 },
+            { name: "Kuracie stehná chladené 700g", category: "Mäso", basePrice: 3.49 },
+            { name: "Kuracie krídla chladené 500g", category: "Mäso", basePrice: 2.99 },
+            { name: "Celé kura chladené 1.5kg", category: "Mäso", basePrice: 4.99 },
+            { name: "Kuracia pečeň chladená 500g", category: "Mäso", basePrice: 2.49 },
+            { name: "Morčacie prsia chladené 400g", category: "Mäso", basePrice: 7.99 },
+            { name: "Morčací horné stehno chladené", category: "Mäso", basePrice: 8.99 },
+            { name: "Bravčové karé bez kosti 600g", category: "Mäso", basePrice: 6.99 },
+            { name: "Bravčové stehno bez kosti 800g", category: "Mäso", basePrice: 7.99 },
+            { name: "Bravčová krkovička bez kosti 700g", category: "Mäso", basePrice: 5.99 },
+            { name: "Bravčové pliecko bez kosti 700g", category: "Mäso", basePrice: 8.99 },
+            { name: "Mleté bravčové mäso 500g", category: "Mäso", basePrice: 4.99 },
+            { name: "Mleté mäso mix (bravčové/hovädzie) 500g", category: "Mäso", basePrice: 5.49 },
+            { name: "Hovädzie zadné (falošná sviečková) 600g", category: "Mäso", basePrice: 12.99 },
+            { name: "Hovädzí guláš (kocky) 500g", category: "Mäso", basePrice: 9.99 },
+            { name: "Hovädzia sviečková pravá", category: "Mäso", basePrice: 15.99 },
+            { name: "Mleté hovädzie mäso 500g", category: "Mäso", basePrice: 6.99 },
+            { name: "Jahňacie kotlety", category: "Mäso", basePrice: 14.99 },
+            { name: "Teľacie stehno", category: "Mäso", basePrice: 16.99 },
+            { name: "Králik celý chladený", category: "Mäso", basePrice: 8.99 },
+
+            // Údeniny a lahôdky
+            { name: "Pražská šunka 96%", category: "Údeniny", basePrice: 14.99 },
+            { name: "Dusená šunka štandard", category: "Údeniny", basePrice: 8.99 },
+            { name: "Kuracia šunka 92%", category: "Údeniny", basePrice: 12.99 },
+            { name: "Mecom Šunková saláma", category: "Údeniny", basePrice: 3.99 },
+            { name: "Nitran saláma", category: "Údeniny", basePrice: 4.99 },
+            { name: "Vysočina saláma", category: "Údeniny", basePrice: 5.99 },
+            { name: "Suchá saláma (Pick, Csabai)", category: "Údeniny", basePrice: 7.99 },
+            { name: "Prosciutto Crudo plátky 100g", category: "Údeniny", basePrice: 8.99 },
+            { name: "Schwarzwaldská šunka plátky 100g", category: "Údeniny", basePrice: 6.99 },
+            { name: "Oravská slanina", category: "Údeniny", basePrice: 5.99 },
+            { name: "Anglická slanina plátky 100g", category: "Údeniny", basePrice: 3.49 },
+            { name: "Klobása na pečenie", category: "Údeniny", basePrice: 4.99 },
+            { name: "Csabanská klobása", category: "Údeniny", basePrice: 5.99 },
+            { name: "Papriková klobása", category: "Údeniny", basePrice: 4.49 },
+            { name: "Párky spišské", category: "Údeniny", basePrice: 2.99 },
+            { name: "Párky viedenské", category: "Údeniny", basePrice: 2.49 },
+            { name: "Párky s obsahom mäsa 90%", category: "Údeniny", basePrice: 3.99 },
+            { name: "Jaternice", category: "Údeniny", basePrice: 3.49 },
+            { name: "Krvavničky", category: "Údeniny", basePrice: 3.49 },
+            { name: "Tlačenka svetlá", category: "Údeniny", basePrice: 4.99 },
+
+            // Zelenina
+            { name: "Zemiaky skoré", category: "Zelenina", basePrice: 1.49 },
+            { name: "Zemiaky neskoré 2.5kg", category: "Zelenina", basePrice: 2.99 },
+            { name: "Cibuľa žltá 1kg", category: "Zelenina", basePrice: 1.29 },
+            { name: "Cibuľa červená", category: "Zelenina", basePrice: 1.99 },
+            { name: "Cesnak slovenský", category: "Zelenina", basePrice: 3.99 },
+            { name: "Mrkva 1kg", category: "Zelenina", basePrice: 1.49 },
+            { name: "Petržlen", category: "Zelenina", basePrice: 1.99 },
+            { name: "Zeler buľvový", category: "Zelenina", basePrice: 1.79 },
+            { name: "Kalérab", category: "Zelenina", basePrice: 1.29 },
+            { name: "Paprika biela", category: "Zelenina", basePrice: 2.99 },
+            { name: "Paprika červená", category: "Zelenina", basePrice: 3.49 },
+            { name: "Paprika zelená", category: "Zelenina", basePrice: 2.79 },
+            { name: "Paprika kapia", category: "Zelenina", basePrice: 3.99 },
+            { name: "Paradajky cherry strapcové 250g", category: "Zelenina", basePrice: 2.49 },
+            { name: "Paradajky koktejlové 500g", category: "Zelenina", basePrice: 2.99 },
+            { name: "Paradajky mäsité", category: "Zelenina", basePrice: 3.49 },
+            { name: "Uhorka šalátová", category: "Zelenina", basePrice: 1.29 },
+            { name: "Baklažán", category: "Zelenina", basePrice: 2.49 },
+            { name: "Cuketa", category: "Zelenina", basePrice: 1.99 },
+            { name: "Kapusta biela", category: "Zelenina", basePrice: 1.49 },
+            { name: "Kapusta červená", category: "Zelenina", basePrice: 1.79 },
+            { name: "Kel", category: "Zelenina", basePrice: 2.49 },
+            { name: "Kapusta čínska", category: "Zelenina", basePrice: 1.99 },
+            { name: "Kapusta kyslá súdková 500g", category: "Zelenina", basePrice: 1.99 },
+            { name: "Brokolica", category: "Zelenina", basePrice: 2.99 },
+            { name: "Karfiol", category: "Zelenina", basePrice: 2.49 },
+            { name: "Pór", category: "Zelenina", basePrice: 1.79 },
+            { name: "Šalát ľadový", category: "Zelenina", basePrice: 1.29 },
+            { name: "Šalát rímsky", category: "Zelenina", basePrice: 1.49 },
+            { name: "Špenát čerstvý baby 100g", category: "Zelenina", basePrice: 1.99 },
+            { name: "Rukola 100g", category: "Zelenina", basePrice: 1.79 },
+            { name: "Polníček 100g", category: "Zelenina", basePrice: 1.69 },
+            { name: "Šampiňóny biele 250g", category: "Zelenina", basePrice: 1.99 },
+            { name: "Hlivy ustricová 300g", category: "Zelenina", basePrice: 2.49 },
+
+            // Ovocie
+            { name: "Jablká Golden Delicious", category: "Ovocie", basePrice: 1.99 },
+            { name: "Jablká Granny Smith", category: "Ovocie", basePrice: 2.49 },
+            { name: "Jablká Gala", category: "Ovocie", basePrice: 2.29 },
+            { name: "Hrušky", category: "Ovocie", basePrice: 2.99 },
+            { name: "Banány", category: "Ovocie", basePrice: 1.49 },
+            { name: "Pomaranče", category: "Ovocie", basePrice: 2.49 },
+            { name: "Mandarínky", category: "Ovocie", basePrice: 2.99 },
+            { name: "Citróny", category: "Ovocie", basePrice: 3.99 },
+            { name: "Limetky", category: "Ovocie", basePrice: 4.99 },
+            { name: "Grep červený", category: "Ovocie", basePrice: 1.99 },
+            { name: "Hrozno biele", category: "Ovocie", basePrice: 3.99 },
+            { name: "Hrozno červené", category: "Ovocie", basePrice: 4.49 },
+            { name: "Kiwi", category: "Ovocie", basePrice: 2.99 },
+            { name: "Ananás", category: "Ovocie", basePrice: 2.99 },
+            { name: "Mango", category: "Ovocie", basePrice: 1.99 },
+            { name: "Avokádo", category: "Ovocie", basePrice: 1.49 },
+            { name: "Jahody 500g", category: "Ovocie", basePrice: 3.99 },
+            { name: "Čučoriedky 125g", category: "Ovocie", basePrice: 2.99 },
+            { name: "Maliny 125g", category: "Ovocie", basePrice: 3.49 },
+
+            // Pečivo
+            { name: "Rožok biely 43g", category: "Pečivo", basePrice: 0.29 },
+            { name: "Grahamový rožok", category: "Pečivo", basePrice: 0.35 },
+            { name: "Žemľa kaiserka natural", category: "Pečivo", basePrice: 0.39 },
+            { name: "Žemľa kaiserka sezamová", category: "Pečivo", basePrice: 0.45 },
+            { name: "Ciabatta", category: "Pečivo", basePrice: 1.29 },
+            { name: "Bageta svetlá", category: "Pečivo", basePrice: 0.89 },
+            { name: "Bageta tmavá viaczrnná", category: "Pečivo", basePrice: 1.09 },
+            { name: "Chlieb pšenično-ražný konzumný 1kg", category: "Pečivo", basePrice: 1.99 },
+            { name: "Chlieb krájaný balený 500g", category: "Pečivo", basePrice: 1.49 },
+            { name: "Toastový chlieb biely 500g", category: "Pečivo", basePrice: 1.29 },
+            { name: "Toastový chlieb celozrnný 500g", category: "Pečivo", basePrice: 1.49 },
+
+            // Cestoviny, ryža a strukoviny
+            { name: "Panzani špagety 500g", category: "Cestoviny", basePrice: 1.49 },
+            { name: "Barilla Spaghetti n.5 500g", category: "Cestoviny", basePrice: 1.99 },
+            { name: "Tesco Cestoviny kolienka 500g", category: "Cestoviny", basePrice: 0.89 },
+            { name: "Ryža guľatozrnná Lagris 1kg", category: "Obilniny", basePrice: 2.49 },
+            { name: "Ryža dlhozrnná vo varných vreckách 4x100g", category: "Obilniny", basePrice: 1.99 },
+            { name: "Ryža Basmati 500g", category: "Obilniny", basePrice: 2.99 },
+            { name: "Šošovica veľkozrnná 500g", category: "Strukoviny", basePrice: 1.99 },
+            { name: "Fazuľa biela 500g", category: "Strukoviny", basePrice: 1.79 },
+            { name: "Cícer 500g", category: "Strukoviny", basePrice: 2.49 },
+
+            // Múka, cukor a prísady
+            { name: "Múka hladká pšeničná T650 1kg", category: "Múka a cukor", basePrice: 1.29 },
+            { name: "Múka polohrubá pšeničná 1kg", category: "Múka a cukor", basePrice: 1.39 },
+            { name: "Cukor kryštálový 1kg", category: "Múka a cukor", basePrice: 1.49 },
+            { name: "Cukor práškový 1kg", category: "Múka a cukor", basePrice: 1.99 },
+            { name: "Droždie čerstvé VIVO 42g", category: "Múka a cukor", basePrice: 0.35 },
+            { name: "Kakao na pečenie 100g", category: "Múka a cukor", basePrice: 2.99 },
+
+            // Oleje, octy a dochucovadlá
+            { name: "Olej slnečnicový 1l", category: "Oleje", basePrice: 1.99 },
+            { name: "Olivový olej extra panenský 500ml", category: "Oleje", basePrice: 4.99 },
+            { name: "Ocot kvasný liehový 8% 1l", category: "Dochucovadlá", basePrice: 0.99 },
+            { name: "Soľ kuchynská jodidovaná 1kg", category: "Dochucovadlá", basePrice: 0.49 },
+            { name: "Horčica plnotučná Snico 200g", category: "Dochucovadlá", basePrice: 1.29 },
+            { name: "Kečup jemný Hellmann's 450g", category: "Dochucovadlá", basePrice: 2.49 },
+            { name: "Majonéza Hellmann's 225ml", category: "Dochucovadlá", basePrice: 2.99 },
+
+            // Káva, čaj a kakao
+            { name: "Popradská káva Štandard mletá 250g", category: "Nápoje", basePrice: 3.99 },
+            { name: "Nescafé Classic instantná káva 200g", category: "Nápoje", basePrice: 6.99 },
+            { name: "Granko instantné kakao 450g", category: "Nápoje", basePrice: 3.99 },
+            { name: "Mistral čaj ovocný", category: "Nápoje", basePrice: 1.99 },
+
+            // Nápoje
+            { name: "Minerálna voda Rajec nesýtená 1.5l", category: "Nápoje", basePrice: 0.59 },
+            { name: "Coca-Cola 2l", category: "Nápoje", basePrice: 2.49 },
+            { name: "Kofola Original 2l", category: "Nápoje", basePrice: 1.99 },
+            { name: "Cappy pomarančový džús 100% 1l", category: "Nápoje", basePrice: 2.99 },
+            { name: "Pivo Zlatý Bažant 12% plechovka 0.5l", category: "Alkohol", basePrice: 0.99 },
+
+            // Konzervy
+            { name: "Fazuľa v paradajkovej omáčke Heinz 415g", category: "Konzervy", basePrice: 1.99 },
+            { name: "Kukurica sladká Bonduelle 340g", category: "Konzervy", basePrice: 1.49 },
+            { name: "Tuniak vo vlastnej šťave konzerva 185g", category: "Konzervy", basePrice: 2.99 },
+
+            // Sladkosti
+            { name: "Milka Alpine Milk čokoláda 100g", category: "Sladkosti", basePrice: 1.99 },
+            { name: "Orion Študentská pečať mliečna 180g", category: "Sladkosti", basePrice: 2.49 },
+            { name: "Snickers tyčinka 50g", category: "Sladkosti", basePrice: 1.29 },
+            { name: "Haribo Zlaté medvedíky gumené cukríky 100g", category: "Sladkosti", basePrice: 1.79 },
+
+            // Slané pochutiny
+            { name: "Slovakia Chips solené 140g", category: "Slané pochutiny", basePrice: 1.99 },
+            { name: "Pringles Original 165g", category: "Slané pochutiny", basePrice: 2.99 }
+        ];
+
+        // Rozšírená databáza slovenských obchodných reťazcov s reálnymi adresami
+        const stores = [
+            // Lidl pobočky
+            { 
+                id: "lidl-dunajska",
+                name: "Lidl", 
+                distance: "0.8 km", 
+                location: "Dunajská 2, Staré Mesto",
+                priceMultiplier: 0.95,
+                status: "Otvorené"
+            },
+            { 
+                id: "lidl-trencianska",
+                name: "Lidl", 
+                distance: "1.2 km", 
+                location: "Trenčianska 57/A, Ružinov",
+                priceMultiplier: 0.95,
+                status: "Otvorené"
+            },
+            { 
+                id: "lidl-skultetyho",
+                name: "Lidl", 
+                distance: "2.1 km", 
+                location: "Škultétyho 1, Nové Mesto",
+                priceMultiplier: 0.96,
+                status: "Otvorené"
+            },
+            // Billa pobočky
+            { 
+                id: "billa-snp",
+                name: "Billa", 
+                distance: "0.5 km", 
+                location: "Námestie SNP 7, Staré Mesto",
+                priceMultiplier: 1.08,
+                status: "Otvorené"
+            },
+            { 
+                id: "billa-bajkalska",
+                name: "Billa", 
+                distance: "1.8 km", 
+                location: "Bajkalská 19A, Ružinov",
+                priceMultiplier: 1.07,
+                status: "Otvorené"
+            },
+            { 
+                id: "billa-eurovea",
+                name: "Billa", 
+                distance: "1.3 km", 
+                location: "Eurovea, Ružinov",
+                priceMultiplier: 1.12,
+                status: "Otvorené"
+            },
+            // Tesco pobočky
+            { 
+                id: "tesco-panonska",
+                name: "Tesco Extra", 
+                distance: "2.7 km", 
+                location: "Panónska cesta 25, Petržalka",
+                priceMultiplier: 1.05,
+                status: "Otvorené"
+            },
+            { 
+                id: "tesco-kamenne",
+                name: "Tesco", 
+                distance: "0.9 km", 
+                location: "Kamenné Námestie 1, Staré Mesto",
+                priceMultiplier: 1.04,
+                status: "Otvorené"
+            },
+            // Kaufland pobočky
+            { 
+                id: "kaufland-trnavska",
+                name: "Kaufland", 
+                distance: "1.9 km", 
+                location: "Trnavská cesta 41/A, Nové Mesto",
+                priceMultiplier: 1.12,
+                status: "Otvorené"
+            },
+            { 
+                id: "kaufland-avion",
+                name: "Kaufland", 
+                distance: "3.2 km", 
+                location: "Ivanská cesta 16 (Avion), Ružinov",
+                priceMultiplier: 1.10,
+                status: "Otvorené"
+            },
+            // COOP pobočky
+            { 
+                id: "coop-mierova",
+                name: "COOP Jednota", 
+                distance: "1.6 km", 
+                location: "Mierová 14, Ružinov",
+                priceMultiplier: 1.15,
+                status: "Otvorené"
+            }
+        ];
+
+        let shoppingList = [];
+        let selectedIndex = -1;
+
+        // DOM elements
+        const itemInput = document.getElementById('itemInput');
+        const autocompleteDropdown = document.getElementById('autocompleteDropdown');
+        const shoppingItems = document.getElementById('shoppingItems');
+        const listStats = document.getElementById('listStats');
+        const comparePricesBtn = document.getElementById('comparePricesBtn');
+        const priceResults = document.getElementById('priceResults');
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            updateListStats();
+            updateCompareButton();
+        });
+
+        function setupEventListeners() {
+            itemInput.addEventListener('input', handleInput);
+            itemInput.addEventListener('keydown', handleKeydown);
+            document.addEventListener('click', hideAutocomplete);
+        }
+
+        function handleInput(event) {
+            const query = event.target.value.trim();
+            
+            if (query.length < 2) {
+                hideAutocomplete();
+                return;
+            }
+
+            const filteredProducts = productDatabase.filter(product => 
+                product.name.toLowerCase().includes(query.toLowerCase())
+            );
+
+            showAutocomplete(filteredProducts);
+        }
+
+        function showAutocomplete(products) {
+            autocompleteDropdown.innerHTML = '';
+            
+            if (products.length === 0) {
+                hideAutocomplete();
+                return;
+            }
+
+            products.slice(0, 5).forEach((product, index) => {
+                const item = document.createElement('div');
+                item.className = 'autocomplete-item';
+                item.innerHTML = `
+                    <div style="font-weight: 500;">${product.name}</div>
+                    <div style="font-size: 13px; color: #6b7280;">${product.category}</div>
+                `;
+                item.onclick = () => selectProduct(product);
+                autocompleteDropdown.appendChild(item);
+            });
+
+            autocompleteDropdown.style.display = 'block';
+            selectedIndex = -1;
+        }
+
+        function hideAutocomplete() {
+            autocompleteDropdown.style.display = 'none';
+            selectedIndex = -1;
+        }
+
+        function handleKeydown(event) {
+            const items = autocompleteDropdown.querySelectorAll('.autocomplete-item');
+            
+            if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+                updateSelection(items);
+            } else if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                selectedIndex = Math.max(selectedIndex - 1, -1);
+                updateSelection(items);
+            } else if (event.key === 'Enter') {
+                event.preventDefault();
+                if (selectedIndex >= 0 && items[selectedIndex]) {
+                    const productName = items[selectedIndex].querySelector('div').textContent;
+                    const product = productDatabase.find(p => p.name === productName);
+                    if (product) selectProduct(product);
+                } else {
+                    addItem();
+                }
+            } else if (event.key === 'Escape') {
+                hideAutocomplete();
+            }
+        }
+
+        function updateSelection(items) {
+            items.forEach((item, index) => {
+                item.classList.toggle('selected', index === selectedIndex);
+            });
+        }
+
+        function selectProduct(product) {
+            itemInput.value = product.name;
+            hideAutocomplete();
+            addItem();
+        }
+
+        function addItem() {
+            const itemName = itemInput.value.trim();
+            
+            if (!itemName) return;
+
+            // Check if item already exists
+            if (shoppingList.some(item => item.name.toLowerCase() === itemName.toLowerCase())) {
+                alert('Položka už je v zozname!');
+                return;
+            }
+
+            // Find product in database or create new one
+            let product = productDatabase.find(p => p.name.toLowerCase() === itemName.toLowerCase());
+            
+            if (!product) {
+                product = {
+                    name: itemName,
+                    category: "Ostatné",
+                    basePrice: 1.00 // Default price for unknown items
+                };
+            }
+
+            const newItem = {
+                id: Date.now(),
+                name: product.name,
+                category: product.category,
+                basePrice: product.basePrice,
+                quantity: 1,
+                completed: false
+            };
+
+            shoppingList.push(newItem);
+            itemInput.value = '';
+            hideAutocomplete();
+            renderShoppingList();
+            updateListStats();
+            updateCompareButton();
+        }
+
+        function renderShoppingList() {
+            shoppingItems.innerHTML = '';
+            
+            shoppingList.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'shopping-item';
+                li.innerHTML = `
+                    <div class="item-checkbox ${item.completed ? 'checked' : ''}" onclick="toggleItem(${item.id})"></div>
+                    <div class="item-info">
+                        <div class="item-name" style="${item.completed ? 'text-decoration: line-through; opacity: 0.6;' : ''}">${item.name}</div>
+                        <div class="item-category">${item.category}</div>
+                    </div>
+                    <div class="item-quantity">${item.quantity}x</div>
+                    <button class="remove-item" onclick="removeItem(${item.id})">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3,6 5,6 21,6"/>
+                            <path d="M19,6V20a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2"/>
+                        </svg>
+                    </button>
+                `;
+                shoppingItems.appendChild(li);
+            });
+        }
+
+        function toggleItem(id) {
+            const item = shoppingList.find(item => item.id === id);
+            if (item) {
+                item.completed = !item.completed;
+                renderShoppingList();
+                updateListStats();
+            }
+        }
+
+        function removeItem(id) {
+            shoppingList = shoppingList.filter(item => item.id !== id);
+            renderShoppingList();
+            updateListStats();
+            updateCompareButton();
+        }
+
+        function updateListStats() {
+            const total = shoppingList.length;
+            const completed = shoppingList.filter(item => item.completed).length;
+            listStats.textContent = `${completed}/${total} položiek`;
+        }
+
+        function updateCompareButton() {
+            const hasItems = shoppingList.length > 0;
+            comparePricesBtn.disabled = !hasItems;
+            comparePricesBtn.style.opacity = hasItems ? '1' : '0.6';
+        }
+
+        function comparePrices() {
+            if (shoppingList.length === 0) return;
+            
+            const selectedStores = getSelectedStores();
+            if (selectedStores.length === 0) {
+                alert('Prosím vyberte aspoň jeden obchod pre porovnanie cien.');
+                return;
+            }
+
+            priceResults.style.display = 'block';
+            document.getElementById('loadingState').style.display = 'block';
+            document.getElementById('resultsContent').style.display = 'none';
+
+            // Simulate API call delay
+            setTimeout(() => {
+                const storeComparisons = calculateStorePrices();
+                displayResults(storeComparisons);
+                
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('resultsContent').style.display = 'block';
+                
+                // Scroll to results
+                priceResults.scrollIntoView({ behavior: 'smooth' });
+            }, 2000);
+        }
+
+        function calculateStorePrices() {
+            const selectedChains = getSelectedStores();
+            
+            // Filter stores based on selected chains, then filter by distance
+            const maxDistance = parseFloat(document.querySelector('.distance-input').value);
+            
+            let filteredStores = stores.filter(store => {
+                const storeChain = store.id.split('-')[0]; // Get chain name from ID (lidl-dunajska -> lidl)
+                const storeDistance = parseFloat(store.distance.replace(' km', ''));
+                
+                return selectedChains.includes(storeChain) && storeDistance <= maxDistance;
+            });
+            
+            // If no stores match criteria, show message
+            if (filteredStores.length === 0) {
+                return [];
+            }
+            
+            return filteredStores.map(store => {
+                const total = shoppingList.reduce((sum, item) => {
+                    const itemPrice = item.basePrice * store.priceMultiplier;
+                    return sum + (itemPrice * item.quantity);
+                }, 0);
+
+                return {
+                    ...store,
+                    total: total,
+                    savings: null // Will be calculated after sorting
+                };
+            }).sort((a, b) => a.total - b.total);
+        }
+
+        function displayResults(storeComparisons) {
+            if (storeComparisons.length === 0) {
+                const storeGrid = document.getElementById('storeGrid');
+                storeGrid.innerHTML = `
+                    <div class="no-results">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                        <h3>Žiadne obchody sa nenašli</h3>
+                        <p>Skúste zvýšiť maximálnu vzdialenosť alebo vybrať viac obchodných reťazcov.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Calculate savings relative to most expensive option
+            const maxPrice = Math.max(...storeComparisons.map(s => s.total));
+            storeComparisons.forEach(store => {
+                store.savings = maxPrice - store.total;
+            });
+
+            const storeGrid = document.getElementById('storeGrid');
+            storeGrid.innerHTML = '';
+
+            storeComparisons.forEach((store, index) => {
+                const isBest = index === 0;
+                const card = document.createElement('div');
+                card.className = `store-card ${isBest ? 'best-price' : ''}`;
+                
+                card.innerHTML = `
+                    ${isBest ? '<div class="best-badge">Najlacnejšie</div>' : ''}
+                    <div class="store-header">
+                        <div class="store-name">${store.name}</div>
+                        <div class="store-distance">${store.distance}</div>
+                    </div>
+                    <div class="store-location">${store.location}</div>
+                    <div class="store-total">€${store.total.toFixed(2)}</div>
+                    ${store.savings > 0 ? `<div class="store-savings">Úspora €${store.savings.toFixed(2)}</div>` : ''}
+                    <button class="select-store-btn" onclick="selectStore('${store.name}', '${store.location}')">
+                        Vybrať obchod
+                    </button>
+                `;
+                
+                storeGrid.appendChild(card);
+            });
+        }
+
+        function selectStore(storeName) {
+            alert(`Vybral ste si obchod: ${storeName}. Tu by sa otvorila navigácia alebo detaily obchodu.`);
+        }
+
+        // Page Transitions
+        function initPageTransitions() {
+            // Create transition overlay
+            const overlay = document.createElement('div');
+            overlay.className = 'page-transition-overlay';
+            overlay.innerHTML = `
+                <div class="transition-content">
+                    <div class="transition-spinner"></div>
+                    <div class="transition-text">Načítavam...</div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+
+            // Add click handlers to navigation links
+            document.querySelectorAll('.nav-item, .logo').forEach(link => {
+                if (link.href && !link.classList.contains('active')) {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const href = this.getAttribute('href');
+                        
+                        if (href && href !== '#' && !href.startsWith('#')) {
+                            startPageTransition(href);
+                        }
+                    });
+                }
+            });
+        }
+
+        function startPageTransition(url) {
+            const overlay = document.querySelector('.page-transition-overlay');
+            
+            // Show overlay
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Simulate loading time and navigate
+            setTimeout(() => {
+                window.location.href = url;
+            }, 500);
+        }
+
+        // Store selection functionality
+        
+        function getSelectedStores() {
+            const checkboxes = document.querySelectorAll('.store-checkbox');
+            const selectedStores = [];
+            
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    selectedStores.push(checkbox.getAttribute('data-store'));
+                }
+            });
+            
+            return selectedStores;
+        }
+
+        // Page load animation
+        function pageLoadAnimation() {
+            document.body.style.opacity = '0';
+            document.body.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                document.body.style.opacity = '1';
+                document.body.style.transform = 'translateY(0)';
+            }, 100);
+        }
+
+        // Save shopping settings
+        function saveShoppingSettings() {
+            const distance = document.querySelector('.distance-input').value;
+            const selectedStores = getSelectedStores();
+            
+            // Save to localStorage for persistence
+            localStorage.setItem('shoppingSettings', JSON.stringify({
+                maxDistance: distance,
+                preferredStores: selectedStores
+            }));
+            
+            // Show confirmation
+            const btn = document.querySelector('.save-settings-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20,6 9,17 4,12"/>
+                </svg>
+                Uložené!
+            `;
+            btn.style.background = '#1a5d1a';
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = 'linear-gradient(135deg, #1a5d1a, #22c55e)';
+            }, 2000);
+        }
+
+        // Initialize store selection event listeners
+        function initStoreSelection() {
+            // Load saved settings
+            const savedSettings = localStorage.getItem('shoppingSettings');
+            if (savedSettings) {
+                const settings = JSON.parse(savedSettings);
+                document.querySelector('.distance-input').value = settings.maxDistance || 10;
+                
+                // Set preferred stores
+                const storeCheckboxes = document.querySelectorAll('.store-checkbox');
+                storeCheckboxes.forEach(checkbox => {
+                    const storeId = checkbox.getAttribute('data-store');
+                    checkbox.checked = settings.preferredStores.includes(storeId);
+                });
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            pageLoadAnimation();
+            initPageTransitions();
+            initStoreSelection();
+        });
+
+        // Handle browser back/forward buttons
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                document.body.style.opacity = '1';
+                document.body.style.transform = 'translateY(0)';
+                const overlay = document.querySelector('.page-transition-overlay');
+                if (overlay) {
+                    overlay.classList.remove('active');
+                }
+                document.body.style.overflow = 'auto';
+            }
+        });
+    </script>
+
+    <!-- Page Transition Overlay -->
+    <div class="page-transition-overlay">
+        <div class="transition-content">
+            <div class="transition-spinner"></div>
+            <div class="transition-text">Načítavam...</div>
+        </div>
+    </div>
+</body>
+</html>

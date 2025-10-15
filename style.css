@@ -1,0 +1,210 @@
+/* Základné štýly pre Pear aplikáciu */
+
+:root {
+    --primary-color: #A8E6CF; /* Svetlá mätová */
+    --dark-green: #3D7B6B;
+    --text-color: #333;
+    --background-color: #F7F9F9;
+    --border-color: #ddd;
+    --white: #fff;
+    --font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+body {
+    font-family: var(--font-family);
+    line-height: 1.6;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+}
+
+header {
+    background-color: var(--white);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+header h1 {
+    color: var(--dark-green);
+    margin: 0;
+    font-size: 2rem;
+}
+
+nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+}
+
+nav li {
+    margin-left: 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--dark-green);
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+nav a:hover, nav a.active {
+    background-color: var(--primary-color);
+}
+
+main {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+section {
+    background-color: var(--white);
+    margin-bottom: 2rem;
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+section h2 {
+    color: var(--dark-green);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.5rem;
+    margin-top: 0;
+}
+
+footer {
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    background-color: var(--white);
+    border-top: 1px solid var(--border-color);
+    color: #777;
+}
+
+/* Úvodná sekcia */
+.intro-columns {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.problem, .solution {
+    flex: 1;
+}
+
+.problem ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.problem li {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: var(--dark-green);
+    color: var(--white);
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-top: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #2C5D53; /* Tmavší odtieň zelenej */
+}
+
+/* Tlačidlá a zoznamy */
+.action-button {
+    background-color: var(--primary-color);
+    color: var(--dark-green);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.action-button:hover {
+    background-color: #8ED9C1;
+}
+
+#shopping-list-container {
+    list-style: none;
+    padding: 0;
+}
+
+#shopping-list-container li {
+    padding: 10px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+}
+
+#shopping-list-container li:last-child {
+    border-bottom: none;
+}
+
+#shopping-list-container input[type="checkbox"] {
+    margin-right: 15px;
+    width: 20px;
+    height: 20px;
+}
+
+#shopping-list-container label {
+    flex-grow: 1;
+}
+
+#shopping-list-container label.completed {
+    text-decoration: line-through;
+    color: #888;
+}
+
+/* Grid pre recepty */
+.grid-container {
+// ...existing code...
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.recipe-card {
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.recipe-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.recipe-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.recipe-card-content {
+    padding: 1rem;
+}
+
+.recipe-card-content h3 {
+    margin-top: 0;
+    color: var(--dark-green);
+}

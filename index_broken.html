@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pear - Vaša kuchyňa, dokonale organizovaná</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fafafa;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        /* Page Transition Styles */
+        .page-transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(26, 93, 26, 0.9), rgba(34, 197, 94, 0.9));
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .page-transition-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .transition-content {
+            text-align: center;
+            color: white;
+        }
+
+        .transition-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto 16px;
+        }
+
+        .transition-text {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">Pear</a>
+                
+                <nav class="main-nav">
+                    <a href="index.html" class="nav-item active">Domov</a>
+                    <a href="recepty.html" class="nav-item">Recepty</a>
+                    <a href="nakupny-zoznam.html" class="nav-item">Nákupný zoznam</a>
+                </nav>
+                
+                <a href="#stats" class="get-started-btn">Začať</a>
+            </div>
+        </div>
+    </header>
+
+    <script src="script.js"></script>
+    
+    <script>
+        // Page Transitions
+        function initPageTransitions() {
+            // Create transition overlay if it doesn't exist
+            if (!document.querySelector('.page-transition-overlay')) {
+                const overlay = document.createElement('div');
+                overlay.className = 'page-transition-overlay';
+                overlay.innerHTML = `
+                    <div class="transition-content">
+                        <div class="transition-spinner"></div>
+                        <div class="transition-text">Načítavam...</div>
+                    </div>
+                `;
+                document.body.appendChild(overlay);
+            }
+
+            // Add click handlers to navigation links
+            document.querySelectorAll('.nav-item, .logo, .btn-secondary').forEach(link => {
+                if (link.href && !link.classList.contains('active')) {
+                    link.addEventListener('click', function(e) {
+                        const href = this.getAttribute('href');
+                        
+                        if (href && href !== '#' && !href.startsWith('#') && href.endsWith('.html')) {
+                            e.preventDefault();
+                            startPageTransition(href);
+                        }
+                    });
+                }
+            });
+        }
+
+        function startPageTransition(url) {
+            const overlay = document.querySelector('.page-transition-overlay');
+            
+            // Show overlay
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Simulate loading time and navigate
+            setTimeout(() => {
+                window.location.href = url;
+            }, 500);
+        }
+
+        // Page load animation
+        function pageLoadAnimation() {
+            document.body.style.opacity = '0';
+            document.body.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                document.body.style.opacity = '1';
+                document.body.style.transform = 'translateY(0)';
+            }, 100);
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            pageLoadAnimation();
+            initPageTransitions();
+        });
+
+        // Handle browser back/forward buttons
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                document.body.style.opacity = '1';
+                document.body.style.transform = 'translateY(0)';
+                const overlay = document.querySelector('.page-transition-overlay');
+                if (overlay) {
+                    overlay.classList.remove('active');
+                }
+                document.body.style.overflow = 'auto';
+            }
+        });
+    </script>
+</body>
+</html>, 0.9));
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .page-transition-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .transition-content {
+            text-align: center;
+            color: white;
+        }
+
+        .transition-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto 16px;
+        }
+
+        .transition-text {
+            font-size: 16px;
+            font-weight: 500;
+        }lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pear | Inteligentné Plánovanie Jedál</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .site-header {
+            background: white;
+            padding: 20px 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a5d1a;
+            letter-spacing: -0.5px;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: #6b7280;
+            font-weight: 400;
+            font-size: 16px;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .nav-item.active {
+            color: #1a5d1a;
+            font-weight: 500;
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #1a5d1a;
+        }
+
+        .nav-item:hover:not(.active) {
+            color: #374151;
+            transform: translateY(-1px);
+        }
+
+        .nav-item {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(26, 93, 26, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-item:hover::before {
+            left: 100%;
+        }
+
+        .get-started-btn {
+            background: #1a5d1a;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .get-started-btn:hover {
+            background: #0f4c0f;
+            transform: translateY(-1px);
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: #fafafa;
+            padding: 100px 0 80px 0;
+            min-height: 70vh;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-text {
+            max-width: 600px;
+        }
+
+        .hero-image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-image svg {
+            filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.1));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero-badge {
+            background: rgba(26, 93, 26, 0.1);
+            color: #1a5d1a;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-block;
+            margin-bottom: 32px;
+        }
+
+        .hero h1 {
+            font-size: 72px;
+            font-weight: 700;
+            line-height: 0.9;
+            margin-bottom: 40px;
+            color: #1a1a1a;
+            letter-spacing: -2px;
+        }
+
+        .hero h1 .highlight {
+            color: #1a5d1a;
+        }
+
+        .hero .subtitle {
+            font-size: 18px;
+            color: #6b7280;
+            max-width: 550px;
+            margin-bottom: 48px;
+            line-height: 1.7;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 80px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: #1a5d1a;
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            background: #0f4c0f;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #6b7280;
+            border: 1px solid #e5e7eb;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+            color: #374151;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 80px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .stat-item {
+            text-align: left;
+        }
+
+        .stat-number {
+            font-size: 64px;
+            font-weight: 700;
+            color: #1a5d1a;
+            line-height: 1;
+            margin-bottom: 16px;
+            letter-spacing: -2px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: #6b7280;
+            font-weight: 400;
+            line-height: 1.4;
+        }
+
+        /* Feature Cards */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            border: 1px solid #f3f4f6;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(26, 93, 26, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            font-size: 28px;
+            color: #1a5d1a;
+        }
+
+        .feature-card h3 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+        }
+
+        .feature-card p {
+            color: #6b7280;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .main-nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 16px;
+            }
+
+            .get-started-btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                text-align: center;
+            }
+
+            .hero-image {
+                order: -1;
+            }
+
+            .hero-image svg {
+                width: 140px;
+                height: 140px;
+            }
+
+            .hero h1 {
+                font-size: 48px;
+                letter-spacing: -1px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                text-align: center;
+            }
+
+            .stat-number {
+                font-size: 48px;
+            }
+
+            .main-nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero h1 {
+                font-size: 40px;
+            }
+
+            .hero .subtitle {
+                font-size: 18px;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .feature-card {
+                padding: 32px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Pear</div>
+                <nav class="main-nav">
+                    <a href="index.html" class="nav-item active">Domov</a>
+                    <a href="recepty.html" class="nav-item">Recepty</a>
+                    <a href="nakupny-zoznam.html" class="nav-item">Nákupný zoznam</a>
+                    <a href="#about" class="nav-item">O nás</a>
+                    <a href="#contact" class="get-started-btn">Začať</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <div class="hero-badge">Inteligentné plánovanie jedál</div>
+                        <h1>
+                            VAŠA KUCHYŇA,<br>
+                            <span class="highlight">DOKONALE</span><br>
+                            ORGANIZOVANÁ
+                        </h1>
+                    </div>
+                    <div class="hero-image">
+                        <svg width="180" height="180" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Kuchynská doska -->
+                            <rect x="20" y="80" width="160" height="100" rx="8" fill="#8B4513" stroke="#654321" stroke-width="2"/>
+                            
+                            <!-- Panvica -->
+                            <ellipse cx="80" cy="110" rx="25" ry="20" fill="#2C2C2C" stroke="#1a1a1a" stroke-width="2"/>
+                            <rect x="105" y="108" width="20" height="4" rx="2" fill="#8B4513"/>
+                            
+                            <!-- Jedlo v panvici -->
+                            <ellipse cx="80" cy="110" rx="18" ry="14" fill="#FF6B6B"/>
+                            <circle cx="75" cy="108" r="3" fill="#4CAF50"/>
+                            <circle cx="85" cy="112" r="2" fill="#FFA726"/>
+                            <circle cx="78" cy="115" r="2" fill="#4CAF50"/>
+                            
+                            <!-- Hrniec -->
+                            <ellipse cx="140" cy="120" rx="20" ry="15" fill="#606060" stroke="#404040" stroke-width="2"/>
+                            <rect x="138" y="105" width="4" height="15" fill="#606060"/>
+                            <rect x="158" y="115" width="12" height="3" rx="1.5" fill="#8B4513"/>
+                            
+                            <!-- Para z hrnca -->
+                            <path d="M130 105 Q132 95 134 105 Q136 95 138 105 Q140 95 142 105 Q144 95 146 105 Q148 95 150 105" 
+                                  stroke="#E0E0E0" stroke-width="2" fill="none" opacity="0.7"/>
+                            
+                            <!-- Nože na stene -->
+                            <rect x="50" y="45" width="2" height="20" fill="#C0C0C0"/>
+                            <rect x="48" y="43" width="6" height="4" rx="1" fill="#8B4513"/>
+                            
+                            <rect x="58" y="40" width="2" height="25" fill="#C0C0C0"/>
+                            <rect x="56" y="38" width="6" height="4" rx="1" fill="#8B4513"/>
+                            
+                            <!-- Zelená paprika -->
+                            <ellipse cx="160" cy="50" rx="8" ry="12" fill="#4CAF50"/>
+                            <rect x="158" y="38" width="4" height="6" fill="#2E7D32"/>
+                            
+                            <!-- Červené paradajky -->
+                            <circle cx="130" cy="55" r="8" fill="#F44336"/>
+                            <path d="M125 47 Q127 45 130 47 Q133 45 135 47" stroke="#4CAF50" stroke-width="2" fill="none"/>
+                            
+                            <circle cx="145" cy="60" r="6" fill="#F44336"/>
+                            <path d="M142 54 Q144 52 145 54 Q146 52 148 54" stroke="#4CAF50" stroke-width="2" fill="none"/>
+                            
+                            <!-- Cibuľa -->
+                            <circle cx="100" cy="45" r="10" fill="#FFF8DC" stroke="#DDD" stroke-width="1"/>
+                            <path d="M95 40 Q100 35 105 40" stroke="#DDD" stroke-width="1" fill="none"/>
+                            <path d="M97 45 Q100 42 103 45" stroke="#DDD" stroke-width="1" fill="none"/>
+                        </svg>
+                    </div>
+                </div>
+                <p class="subtitle">
+                    Pear je inteligentná aplikácia pre plánovanie jedál, správu zásob a optimalizáciu nákupov. Šetrite čas, peniaze a znižujte plytvanie.
+                </p>
+                <div class="cta-buttons">
+                    <a href="#stats" class="btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/></svg>
+                        Začať plánovať
+                    </a>
+                    <a href="recepty.html" class="btn-secondary">
+                        Pozrieť recepty
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="stats" class="stats-section">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">1000+</div>
+                        <div class="stat-label">Spokojných užívateľov</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">≤6</div>
+                        <div class="stat-label">Krokov k nákupnému zoznamu</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Automatizácia</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features-section">
+            <div class="container">
+                <h2>Kľúčové vlastnosti</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3>Personalizovaný jedálniček</h3>
+                        <p>Získajte návrhy jedál na mieru alebo si nechajte vygenerovať kompletný plán.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Inteligentný nákupný zoznam</h3>
+                        <p>Automaticky vytvorený zoznam na základe toho, čo vám chýba v špajzi.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Správa zásob</h3>
+                        <p>Majte vždy prehľad o tom, čo máte doma, a predchádzajte zbytočným nákupom.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="shopping-list-section" class="shopping-list-section" style="display: none;">
+            <div class="container">
+                <h2>Váš nákupný zoznam</h2>
+                <ul id="shopping-list-container">
+                    <!-- Položky budú dynamicky vložené sem -->
+                </ul>
+            </div>
+        </section>
+
+        <section id="recipes" class="recipes-section">
+            <div class="container">
+                <h2>Populárne recepty</h2>
+                <div id="recipe-container" class="recipes-grid">
+                    <!-- Recepty budú dynamicky vložené sem -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer-bottom">
+        <div class="container">
+            <p>&copy; 2025 Pear Inc. Všetky práva vyhradené.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
