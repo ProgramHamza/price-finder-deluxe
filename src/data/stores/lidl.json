@@ -1,0 +1,64 @@
+{
+  "chain": "Lidl",
+  "logo": "🛒",
+  "stores": [
+    {
+      "id": "lidl-dunajska",
+      "name": "Lidl Dunajská",
+      "location": "Dunajská 22, Bratislava",
+      "distance": "1.2 km",
+      "coordinates": { "lat": 48.1516, "lng": 17.1193 }
+    },
+    {
+      "id": "lidl-ruzinov",
+      "name": "Lidl Ružinov",
+      "location": "Tomášikova 50, Bratislava",
+      "distance": "2.8 km",
+      "coordinates": { "lat": 48.1516, "lng": 17.1393 }
+    },
+    {
+      "id": "lidl-petrzalka",
+      "name": "Lidl Petržalka",
+      "location": "Osuského 2A, Bratislava",
+      "distance": "4.1 km",
+      "coordinates": { "lat": 48.1216, "lng": 17.1093 }
+    }
+  ],
+  "prices": {
+    "chlieb": 0.69,
+    "rohlik": 0.09,
+    "mleko": 0.99,
+    "maslo": 1.89,
+    "jogurt": 0.35,
+    "syr-eidam": 5.99,
+    "vajcia": 1.99,
+    "jablka": 1.49,
+    "banany": 1.29,
+    "pomarance": 1.79,
+    "zemiaky": 0.89,
+    "mrkva": 0.99,
+    "paradajky": 2.49,
+    "okurky": 1.99,
+    "salat": 0.79,
+    "cibula": 0.99,
+    "cesnak": 3.99,
+    "kurca-prsia": 5.49,
+    "sunka": 7.99,
+    "salama": 6.49,
+    "ryza": 1.19,
+    "testoviny": 0.69,
+    "muka": 0.79,
+    "cukor": 0.99,
+    "olej": 1.49,
+    "sol": 0.29,
+    "kava": 2.99,
+    "caj": 1.49,
+    "dzus": 0.99,
+    "mineralna-voda": 0.39,
+    "cokolada": 0.89,
+    "susenky": 1.29,
+    "toaletny-papier": 3.49,
+    "sampom": 1.99,
+    "mydlo": 1.49
+  }
+}

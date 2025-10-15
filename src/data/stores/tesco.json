@@ -1,0 +1,57 @@
+{
+  "chain": "Tesco",
+  "logo": "🛍️",
+  "stores": [
+    {
+      "id": "tesco-extra",
+      "name": "Tesco Extra Zentrum",
+      "location": "Karadžičova 8, Bratislava",
+      "distance": "1.8 km",
+      "coordinates": { "lat": 48.1416, "lng": 17.1093 }
+    },
+    {
+      "id": "tesco-lamac",
+      "name": "Tesco Lamač",
+      "location": "Lamačská cesta 3, Bratislava",
+      "distance": "5.2 km",
+      "coordinates": { "lat": 48.1916, "lng": 17.0593 }
+    }
+  ],
+  "prices": {
+    "chlieb": 0.75,
+    "rohlik": 0.10,
+    "mleko": 1.05,
+    "maslo": 1.95,
+    "jogurt": 0.39,
+    "syr-eidam": 6.29,
+    "vajcia": 2.15,
+    "jablka": 1.59,
+    "banany": 1.39,
+    "pomarance": 1.89,
+    "zemiaky": 0.95,
+    "mrkva": 1.09,
+    "paradajky": 2.59,
+    "okurky": 2.09,
+    "salat": 0.85,
+    "cibula": 1.05,
+    "cesnak": 4.29,
+    "kurca-prsia": 5.79,
+    "sunka": 8.49,
+    "salama": 6.79,
+    "ryza": 1.29,
+    "testoviny": 0.75,
+    "muka": 0.85,
+    "cukor": 1.09,
+    "olej": 1.59,
+    "sol": 0.35,
+    "kava": 3.29,
+    "caj": 1.59,
+    "dzus": 1.09,
+    "mineralna-voda": 0.45,
+    "cokolada": 0.95,
+    "susenky": 1.39,
+    "toaletny-papier": 3.79,
+    "sampom": 2.19,
+    "mydlo": 1.59
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "chain": "Kaufland",
+  "logo": "🏪",
+  "stores": [
+    {
+      "id": "kaufland-mlynske-nivy",
+      "name": "Kaufland Mlynské Nivy",
+      "location": "Mlynské Nivy 73, Bratislava",
+      "distance": "2.3 km",
+      "coordinates": { "lat": 48.1556, "lng": 17.1293 }
+    },
+    {
+      "id": "kaufland-raca",
+      "name": "Kaufland Rača",
+      "location": "Kadnárova 126, Bratislava",
+      "distance": "6.5 km",
+      "coordinates": { "lat": 48.1916, "lng": 17.1593 }
+    }
+  ],
+  "prices": {
+    "chlieb": 0.72,
+    "rohlik": 0.09,
+    "mleko": 1.02,
+    "maslo": 1.92,
+    "jogurt": 0.37,
+    "syr-eidam": 6.15,
+    "vajcia": 2.05,
+    "jablka": 1.55,
+    "banany": 1.35,
+    "pomarance": 1.85,
+    "zemiaky": 0.92,
+    "mrkva": 1.05,
+    "paradajky": 2.55,
+    "okurky": 2.05,
+    "salat": 0.82,
+    "cibula": 1.02,
+    "cesnak": 4.15,
+    "kurca-prsia": 5.65,
+    "sunka": 8.25,
+    "salama": 6.65,
+    "ryza": 1.25,
+    "testoviny": 0.72,
+    "muka": 0.82,
+    "cukor": 1.05,
+    "olej": 1.55,
+    "sol": 0.32,
+    "kava": 3.15,
+    "caj": 1.55,
+    "dzus": 1.05,
+    "mineralna-voda": 0.42,
+    "cokolada": 0.92,
+    "susenky": 1.35,
+    "toaletny-papier": 3.65,
+    "sampom": 2.09,
+    "mydlo": 1.55
+  }
+}

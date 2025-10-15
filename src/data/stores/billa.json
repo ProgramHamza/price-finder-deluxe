@@ -1,0 +1,57 @@
+{
+  "chain": "Billa",
+  "logo": "🏬",
+  "stores": [
+    {
+      "id": "billa-stare-mesto",
+      "name": "Billa Staré Mesto",
+      "location": "Obchodná 62, Bratislava",
+      "distance": "0.9 km",
+      "coordinates": { "lat": 48.1486, "lng": 17.1113 }
+    },
+    {
+      "id": "billa-nove-mesto",
+      "name": "Billa Nové Mesto",
+      "location": "Vajnorská 100, Bratislava",
+      "distance": "3.4 km",
+      "coordinates": { "lat": 48.1656, "lng": 17.1443 }
+    }
+  ],
+  "prices": {
+    "chlieb": 0.79,
+    "rohlik": 0.11,
+    "mleko": 1.09,
+    "maslo": 2.05,
+    "jogurt": 0.42,
+    "syr-eidam": 6.49,
+    "vajcia": 2.25,
+    "jablka": 1.69,
+    "banany": 1.45,
+    "pomarance": 1.95,
+    "zemiaky": 1.05,
+    "mrkva": 1.15,
+    "paradajky": 2.69,
+    "okurky": 2.19,
+    "salat": 0.89,
+    "cibula": 1.09,
+    "cesnak": 4.49,
+    "kurca-prsia": 5.99,
+    "sunka": 8.79,
+    "salama": 6.99,
+    "ryza": 1.35,
+    "testoviny": 0.79,
+    "muka": 0.89,
+    "cukor": 1.15,
+    "olej": 1.69,
+    "sol": 0.39,
+    "kava": 3.49,
+    "caj": 1.69,
+    "dzus": 1.15,
+    "mineralna-voda": 0.49,
+    "cokolada": 0.99,
+    "susenky": 1.49,
+    "toaletny-papier": 3.99,
+    "sampom": 2.29,
+    "mydlo": 1.69
+  }
+}

@@ -1,0 +1,212 @@
+[
+  {
+    "id": "chlieb",
+    "name": "Chlieb biely",
+    "category": "Pečivo",
+    "unit": "ks"
+  },
+  {
+    "id": "rohlik",
+    "name": "Rožok",
+    "category": "Pečivo",
+    "unit": "ks"
+  },
+  {
+    "id": "mleko",
+    "name": "Mlieko 1L",
+    "category": "Mliečne výrobky",
+    "unit": "l"
+  },
+  {
+    "id": "maslo",
+    "name": "Maslo 250g",
+    "category": "Mliečne výrobky",
+    "unit": "ks"
+  },
+  {
+    "id": "jogurt",
+    "name": "Jogurt biely",
+    "category": "Mliečne výrobky",
+    "unit": "ks"
+  },
+  {
+    "id": "syr-eidam",
+    "name": "Syr Eidam",
+    "category": "Mliečne výrobky",
+    "unit": "kg"
+  },
+  {
+    "id": "vajcia",
+    "name": "Vajcia L (10ks)",
+    "category": "Mliečne výrobky",
+    "unit": "bal"
+  },
+  {
+    "id": "jablka",
+    "name": "Jablká",
+    "category": "Ovocie",
+    "unit": "kg"
+  },
+  {
+    "id": "banany",
+    "name": "Banány",
+    "category": "Ovocie",
+    "unit": "kg"
+  },
+  {
+    "id": "pomarance",
+    "name": "Pomaranče",
+    "category": "Ovocie",
+    "unit": "kg"
+  },
+  {
+    "id": "zemiaky",
+    "name": "Zemiaky",
+    "category": "Zelenina",
+    "unit": "kg"
+  },
+  {
+    "id": "mrkva",
+    "name": "Mrkva",
+    "category": "Zelenina",
+    "unit": "kg"
+  },
+  {
+    "id": "paradajky",
+    "name": "Paradajky",
+    "category": "Zelenina",
+    "unit": "kg"
+  },
+  {
+    "id": "okurky",
+    "name": "Uhorky",
+    "category": "Zelenina",
+    "unit": "kg"
+  },
+  {
+    "id": "salat",
+    "name": "Šalát ľadový",
+    "category": "Zelenina",
+    "unit": "ks"
+  },
+  {
+    "id": "cibula",
+    "name": "Cibuľa",
+    "category": "Zelenina",
+    "unit": "kg"
+  },
+  {
+    "id": "cesnak",
+    "name": "Cesnak",
+    "category": "Zelenina",
+    "unit": "kg"
+  },
+  {
+    "id": "kurca-prsia",
+    "name": "Kuracie prsia",
+    "category": "Mäso",
+    "unit": "kg"
+  },
+  {
+    "id": "sunka",
+    "name": "Šunka",
+    "category": "Mäso",
+    "unit": "kg"
+  },
+  {
+    "id": "salama",
+    "name": "Saláma",
+    "category": "Mäso",
+    "unit": "kg"
+  },
+  {
+    "id": "ryza",
+    "name": "Ryža biela 1kg",
+    "category": "Trvanlivé potraviny",
+    "unit": "bal"
+  },
+  {
+    "id": "testoviny",
+    "name": "Cestoviny",
+    "category": "Trvanlivé potraviny",
+    "unit": "bal"
+  },
+  {
+    "id": "muka",
+    "name": "Múka hladká 1kg",
+    "category": "Trvanlivé potraviny",
+    "unit": "bal"
+  },
+  {
+    "id": "cukor",
+    "name": "Cukor kryštálový 1kg",
+    "category": "Trvanlivé potraviny",
+    "unit": "bal"
+  },
+  {
+    "id": "olej",
+    "name": "Olej slnečnicový 1L",
+    "category": "Trvanlivé potraviny",
+    "unit": "l"
+  },
+  {
+    "id": "sol",
+    "name": "Soľ kuchynská",
+    "category": "Trvanlivé potraviny",
+    "unit": "bal"
+  },
+  {
+    "id": "kava",
+    "name": "Káva mletá 250g",
+    "category": "Nápoje",
+    "unit": "bal"
+  },
+  {
+    "id": "caj",
+    "name": "Čaj čierny",
+    "category": "Nápoje",
+    "unit": "bal"
+  },
+  {
+    "id": "dzus",
+    "name": "Džús pomarančový 1L",
+    "category": "Nápoje",
+    "unit": "l"
+  },
+  {
+    "id": "mineralna-voda",
+    "name": "Minerálna voda 1.5L",
+    "category": "Nápoje",
+    "unit": "l"
+  },
+  {
+    "id": "cokolada",
+    "name": "Čokoláda mliečna",
+    "category": "Sladkosti",
+    "unit": "ks"
+  },
+  {
+    "id": "susenky",
+    "name": "Sušienky maslové",
+    "category": "Sladkosti",
+    "unit": "bal"
+  },
+  {
+    "id": "toaletny-papier",
+    "name": "Toaletný papier 8ks",
+    "category": "Drogéria",
+    "unit": "bal"
+  },
+  {
+    "id": "sampom",
+    "name": "Šampón",
+    "category": "Drogéria",
+    "unit": "ks"
+  },
+  {
+    "id": "mydlo",
+    "name": "Mydlo tekuté",
+    "category": "Drogéria",
+    "unit": "ks"
+  }
+]
